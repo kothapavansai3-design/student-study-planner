@@ -40,14 +40,13 @@ async function request(url, options = {}) {
     const text = await response.text();
 
     if (!response.ok) {
-
         let errorMessage = text || "Request failed";
 
         try {
             const errorData = JSON.parse(text);
             errorMessage = errorData.message || text;
         } catch (error) {
-            // Keep the original response text.
+            // Keep the original response.
         }
 
         throw new Error(errorMessage);
@@ -93,6 +92,11 @@ document.addEventListener("DOMContentLoaded", function () {
         setupGoals();
     }
 
+    if (document.getElementById("noteForm")) {
+        requireLogin();
+        setupNotes();
+    }
+
     if (document.getElementById("subjectCount")) {
         requireLogin();
         loadDashboard();
@@ -117,39 +121,16 @@ function setupRegister() {
 
         try {
 
-            const name =
-                document.getElementById("name").value.trim();
-
-            const email =
-                document.getElementById("email").value.trim();
-
-            const password =
-                document.getElementById("password").value;
-
-            const studentCategory =
-                document.getElementById("studentCategory").value;
-
-            const classYear =
-                document.getElementById("classYear").value;
-
-            if (!studentCategory || !classYear) {
-
-                message.style.color = "red";
-
-                message.textContent =
-                    "Please select your student category and class/year.";
-
-                return;
-            }
-
             const user = await request("/users/register", {
                 method: "POST",
                 body: JSON.stringify({
-                    name: name,
-                    email: email,
-                    password: password,
-                    studentCategory: studentCategory,
-                    classYear: classYear
+                    name: document.getElementById("name").value.trim(),
+                    email: document.getElementById("email").value.trim(),
+                    password: document.getElementById("password").value,
+                    studentCategory:
+                    document.getElementById("studentCategory").value,
+                    classYear:
+                    document.getElementById("classYear").value
                 })
             });
 
@@ -167,7 +148,6 @@ function setupRegister() {
             console.error("Registration error:", error);
 
             message.style.color = "red";
-
             message.textContent =
                 "Registration failed: " + error.message;
         }
@@ -186,12 +166,6 @@ function setupLogin() {
 
         e.preventDefault();
 
-        const email =
-            document.getElementById("email").value.trim();
-
-        const password =
-            document.getElementById("password").value;
-
         const message = document.getElementById("message");
 
         message.textContent = "Logging in...";
@@ -201,17 +175,15 @@ function setupLogin() {
             const user = await request("/users/login", {
                 method: "POST",
                 body: JSON.stringify({
-                    email: email,
-                    password: password
+                    email: document.getElementById("email").value.trim(),
+                    password: document.getElementById("password").value
                 })
             });
 
             saveUser(user);
 
             message.style.color = "green";
-
-            message.textContent =
-                "Login successful! Opening dashboard...";
+            message.textContent = "Login successful!";
 
             setTimeout(function () {
                 window.location.href = "dashboard.html";
@@ -222,7 +194,6 @@ function setupLogin() {
             console.error("Login error:", error);
 
             message.style.color = "red";
-
             message.textContent =
                 "Login failed: " + error.message;
         }
@@ -230,24 +201,18 @@ function setupLogin() {
 }
 
 // ======================================================
-// SUBJECT PAGE
+// SUBJECTS
 // ======================================================
 
 async function setupSubjects() {
 
     const user = getUser();
 
-    if (!user) {
-        return;
-    }
+    if (!user) return;
 
     await loadSubjects(user.id);
 
     const subjectForm = document.getElementById("subjectForm");
-
-    if (!subjectForm) {
-        return;
-    }
 
     subjectForm.onsubmit = async function (e) {
 
@@ -277,25 +242,17 @@ async function setupSubjects() {
             console.error("Subject error:", error);
 
             message.style.color = "red";
-
             message.textContent =
                 "Could not add subject: " + error.message;
         }
     };
 }
 
-// ======================================================
-// LOAD SUBJECTS
-// ======================================================
-
 async function loadSubjects(userId) {
 
     try {
 
-        const subjects =
-            await request("/subjects/user/" + userId);
-
-        console.log("Subjects received:", subjects);
+        const subjects = await request("/subjects/user/" + userId);
 
         const subjectList = document.getElementById("subjectList");
 
@@ -303,19 +260,16 @@ async function loadSubjects(userId) {
 
             if (!Array.isArray(subjects) || subjects.length === 0) {
 
-                subjectList.innerHTML =
-                    "<p>No subjects added yet.</p>";
+                subjectList.innerHTML = "<p>No subjects added yet.</p>";
 
             } else {
 
                 subjectList.innerHTML = subjects.map(function (subject) {
-
                     return `
                         <div class="item">
                             <strong>${escapeHtml(subject.name)}</strong>
                         </div>
                     `;
-
                 }).join("");
             }
         }
@@ -324,16 +278,8 @@ async function loadSubjects(userId) {
 
         if (subjectSelect) {
 
-            subjectSelect.innerHTML = "";
-
-            const defaultOption = document.createElement("option");
-
-            defaultOption.value = "";
-            defaultOption.textContent = "Select Subject";
-            defaultOption.disabled = true;
-            defaultOption.selected = true;
-
-            subjectSelect.appendChild(defaultOption);
+            subjectSelect.innerHTML =
+                '<option value="" disabled selected>Select Subject</option>';
 
             if (Array.isArray(subjects)) {
 
@@ -363,25 +309,19 @@ async function loadSubjects(userId) {
 }
 
 // ======================================================
-// TASK PAGE
+// TASKS
 // ======================================================
 
 async function setupTasks() {
 
     const user = getUser();
 
-    if (!user) {
-        return;
-    }
+    if (!user) return;
 
     await loadSubjects(user.id);
     await loadTasks(user.id);
 
     const taskForm = document.getElementById("taskForm");
-
-    if (!taskForm) {
-        return;
-    }
 
     taskForm.onsubmit = async function (e) {
 
@@ -406,10 +346,13 @@ async function setupTasks() {
                 method: "POST",
                 body: JSON.stringify({
                     title: document.getElementById("taskTitle").value.trim(),
-                    description: document.getElementById("description").value,
+                    description:
+                    document.getElementById("description").value,
                     subjectId: Number(selectedSubject),
-                    deadline: document.getElementById("deadline").value || null,
-                    reminder: document.getElementById("reminder").value || null,
+                    deadline:
+                        document.getElementById("deadline").value || null,
+                    reminder:
+                        document.getElementById("reminder").value || null,
                     status: "PENDING"
                 })
             });
@@ -427,29 +370,21 @@ async function setupTasks() {
             console.error("Task error:", error);
 
             message.style.color = "red";
-
             message.textContent =
                 "Could not add task: " + error.message;
         }
     };
 }
 
-// ======================================================
-// LOAD TASKS
-// ======================================================
-
 async function loadTasks(userId) {
 
     try {
 
-        const tasks =
-            await request("/tasks/user/" + userId);
+        const tasks = await request("/tasks/user/" + userId);
 
         const taskList = document.getElementById("taskList");
 
-        if (!taskList) {
-            return;
-        }
+        if (!taskList) return;
 
         if (!Array.isArray(tasks) || tasks.length === 0) {
 
@@ -474,15 +409,9 @@ async function loadTasks(userId) {
                         ${escapeHtml(task.subjectName || "Unknown")}
                     </p>
 
-                    <p>
-                        <b>Deadline:</b>
-                        ${formatDate(task.deadline)}
-                    </p>
+                    <p><b>Deadline:</b> ${formatDate(task.deadline)}</p>
 
-                    <p>
-                        <b>Reminder:</b>
-                        ${formatDate(task.reminder)}
-                    </p>
+                    <p><b>Reminder:</b> ${formatDate(task.reminder)}</p>
 
                     <span class="badge ${completed ? "done" : ""}">
                         ${escapeHtml(task.status)}
@@ -504,7 +433,6 @@ async function loadTasks(userId) {
 
                 </div>
             `;
-
         }).join("");
 
     } catch (error) {
@@ -520,10 +448,6 @@ async function loadTasks(userId) {
     }
 }
 
-// ======================================================
-// COMPLETE TASK
-// ======================================================
-
 async function completeTask(id) {
 
     try {
@@ -534,9 +458,7 @@ async function completeTask(id) {
 
         const user = getUser();
 
-        if (user) {
-            await loadTasks(user.id);
-        }
+        if (user) await loadTasks(user.id);
 
     } catch (error) {
 
@@ -546,15 +468,9 @@ async function completeTask(id) {
     }
 }
 
-// ======================================================
-// DELETE TASK
-// ======================================================
-
 async function deleteTask(id) {
 
-    if (!confirm("Delete this task?")) {
-        return;
-    }
+    if (!confirm("Delete this task?")) return;
 
     try {
 
@@ -564,9 +480,7 @@ async function deleteTask(id) {
 
         const user = getUser();
 
-        if (user) {
-            await loadTasks(user.id);
-        }
+        if (user) await loadTasks(user.id);
 
     } catch (error) {
 
@@ -577,19 +491,241 @@ async function deleteTask(id) {
 }
 
 // ======================================================
-// GOALS PAGE
+// NOTES
+// ======================================================
+
+async function setupNotes() {
+
+    const user = getUser();
+
+    if (!user) return;
+
+    const noteForm = document.getElementById("noteForm");
+    const noteMessage = document.getElementById("noteMessage");
+
+    await loadNotes(user.id);
+
+    noteForm.addEventListener("submit", async function (e) {
+
+        e.preventDefault();
+
+        noteMessage.style.color = "black";
+        noteMessage.textContent = "Saving note...";
+
+        try {
+
+            const title =
+                document.getElementById("noteTitle").value.trim();
+
+            const content =
+                document.getElementById("noteContent").value.trim();
+
+            if (!title || !content) {
+
+                noteMessage.style.color = "red";
+                noteMessage.textContent =
+                    "Please enter both a title and note content.";
+
+                return;
+            }
+
+            await request("/notes", {
+                method: "POST",
+                body: JSON.stringify({
+                    title: title,
+                    content: content,
+                    subject: "",
+                    userId: user.id
+                })
+            });
+
+            noteForm.reset();
+
+            noteMessage.style.color = "green";
+            noteMessage.textContent = "Note saved successfully!";
+
+            await loadNotes(user.id);
+
+        } catch (error) {
+
+            console.error("Note saving error:", error);
+
+            noteMessage.style.color = "red";
+            noteMessage.textContent =
+                "Could not save note: " + error.message;
+        }
+    });
+}
+
+// ======================================================
+// LOAD NOTES
+// ======================================================
+
+async function loadNotes(userId) {
+
+    const notesList = document.getElementById("notesList");
+
+    if (!notesList) return;
+
+    try {
+
+        const notes = await request("/notes/user/" + userId);
+
+        if (!Array.isArray(notes) || notes.length === 0) {
+
+            notesList.innerHTML = "<p>No notes saved yet.</p>";
+
+            return;
+        }
+
+        notesList.innerHTML = notes.map(function (note) {
+
+            return `
+                <div class="item">
+
+                    <h3>${escapeHtml(note.title)}</h3>
+
+                    <p class="note-content">
+                        ${escapeHtml(note.content).replace(/\n/g, "<br>")}
+                    </p>
+
+                    ${
+                note.subject
+                    ? `<p><strong>Subject:</strong>
+                               ${escapeHtml(note.subject)}</p>`
+                    : ""
+            }
+
+                    <button
+                        type="button"
+                        class="primary-btn"
+                        onclick="editNote(${note.id})">
+                        Edit
+                    </button>
+
+                    <button
+                        type="button"
+                        class="danger"
+                        onclick="deleteNote(${note.id})">
+                        Delete
+                    </button>
+
+                </div>
+            `;
+        }).join("");
+
+    } catch (error) {
+
+        console.error("Notes loading error:", error);
+
+        notesList.innerHTML =
+            "<p>Could not load notes. Please refresh the page.</p>";
+    }
+}
+
+// ======================================================
+// EDIT NOTE
+// ======================================================
+
+async function editNote(id) {
+
+    try {
+
+        const user = getUser();
+
+        if (!user) return;
+
+        const notes = await request("/notes/user/" + user.id);
+
+        const note = notes.find(function (item) {
+            return item.id === id;
+        });
+
+        if (!note) {
+            alert("Note not found.");
+            return;
+        }
+
+        const newTitle = prompt("Enter note title:", note.title);
+
+        if (newTitle === null) return;
+
+        if (!newTitle.trim()) {
+            alert("Note title cannot be empty.");
+            return;
+        }
+
+        const newContent = prompt("Enter note content:", note.content);
+
+        if (newContent === null) return;
+
+        if (!newContent.trim()) {
+            alert("Note content cannot be empty.");
+            return;
+        }
+
+        await request("/notes/" + id, {
+            method: "PUT",
+            body: JSON.stringify({
+                title: newTitle.trim(),
+                content: newContent.trim(),
+                subject: note.subject || ""
+            })
+        });
+
+        alert("Note updated successfully!");
+
+        await loadNotes(user.id);
+
+    } catch (error) {
+
+        console.error("Note update error:", error);
+
+        alert("Could not update note: " + error.message);
+    }
+}
+
+// ======================================================
+// DELETE NOTE
+// ======================================================
+
+async function deleteNote(id) {
+
+    if (!confirm("Are you sure you want to delete this note?")) {
+        return;
+    }
+
+    try {
+
+        await request("/notes/" + id, {
+            method: "DELETE"
+        });
+
+        const user = getUser();
+
+        if (user) {
+            await loadNotes(user.id);
+        }
+
+    } catch (error) {
+
+        console.error("Note delete error:", error);
+
+        alert("Could not delete note: " + error.message);
+    }
+}
+
+// ======================================================
+// GOALS
 // ======================================================
 
 async function setupGoals() {
 
     const user = getUser();
 
-    if (!user) {
-        return;
-    }
+    if (!user) return;
 
     const goalForm = document.getElementById("goalForm");
-
     const goalMessage = document.getElementById("goalMessage");
 
     await loadGoals(user.id);
@@ -634,7 +770,11 @@ async function setupGoals() {
 
             goalForm.reset();
 
-            document.getElementById("progress").value = 0;
+            const progress = document.getElementById("progress");
+
+            if (progress) {
+                progress.value = 0;
+            }
 
             goalMessage.style.color = "green";
             goalMessage.textContent = "Goal added successfully!";
@@ -646,29 +786,21 @@ async function setupGoals() {
             console.error("Goal saving error:", error);
 
             goalMessage.style.color = "red";
-
             goalMessage.textContent =
                 "Could not save goal: " + error.message;
         }
     });
 }
 
-// ======================================================
-// LOAD GOALS
-// ======================================================
-
 async function loadGoals(userId) {
 
     const goalsList = document.getElementById("goalsList");
 
-    if (!goalsList) {
-        return;
-    }
+    if (!goalsList) return;
 
     try {
 
-        const goals =
-            await request("/goals/user/" + userId);
+        const goals = await request("/goals/user/" + userId);
 
         if (!Array.isArray(goals) || goals.length === 0) {
 
@@ -707,27 +839,20 @@ async function loadGoals(userId) {
 
                     ${
                 !completed
-                    ? `
-                            <button
-                                type="button"
-                                class="success"
-                                onclick="completeGoal(${goal.id})">
-                                Mark Completed
-                            </button>
-                        `
+                    ? `<button class="success"
+                                   onclick="completeGoal(${goal.id})">
+                               Mark Completed
+                           </button>`
                     : ""
             }
 
-                    <button
-                        type="button"
-                        class="danger"
-                        onclick="deleteGoal(${goal.id})">
+                    <button class="danger"
+                            onclick="deleteGoal(${goal.id})">
                         Delete
                     </button>
 
                 </div>
             `;
-
         }).join("");
 
     } catch (error) {
@@ -739,10 +864,6 @@ async function loadGoals(userId) {
     }
 }
 
-// ======================================================
-// COMPLETE GOAL
-// ======================================================
-
 async function completeGoal(id) {
 
     try {
@@ -753,9 +874,7 @@ async function completeGoal(id) {
 
         const user = getUser();
 
-        if (user) {
-            await loadGoals(user.id);
-        }
+        if (user) await loadGoals(user.id);
 
     } catch (error) {
 
@@ -764,10 +883,6 @@ async function completeGoal(id) {
         alert("Could not complete goal: " + error.message);
     }
 }
-
-// ======================================================
-// DELETE GOAL
-// ======================================================
 
 async function deleteGoal(id) {
 
@@ -783,9 +898,7 @@ async function deleteGoal(id) {
 
         const user = getUser();
 
-        if (user) {
-            await loadGoals(user.id);
-        }
+        if (user) await loadGoals(user.id);
 
     } catch (error) {
 
@@ -803,9 +916,7 @@ async function loadDashboard() {
 
     const user = getUser();
 
-    if (!user) {
-        return;
-    }
+    if (!user) return;
 
     const welcome = document.getElementById("welcome");
 
@@ -815,21 +926,17 @@ async function loadDashboard() {
 
     try {
 
-        const subjects =
-            await request("/subjects/user/" + user.id);
+        const subjects = await request("/subjects/user/" + user.id);
 
-        const subjectCount =
-            document.getElementById("subjectCount");
+        const subjectCount = document.getElementById("subjectCount");
 
         if (subjectCount) {
             subjectCount.textContent = subjects.length;
         }
 
-        const tasks =
-            await request("/tasks/user/" + user.id);
+        const tasks = await request("/tasks/user/" + user.id);
 
-        const taskCount =
-            document.getElementById("taskCount");
+        const taskCount = document.getElementById("taskCount");
 
         if (taskCount) {
             taskCount.textContent = tasks.length;
@@ -843,35 +950,29 @@ async function loadDashboard() {
             return task.status === "COMPLETED";
         });
 
-        const pendingCount =
-            document.getElementById("pendingCount");
+        const pendingCount = document.getElementById("pendingCount");
 
         if (pendingCount) {
             pendingCount.textContent = pendingTasks.length;
         }
 
-        const completedCount =
-            document.getElementById("completedCount");
+        const completedCount = document.getElementById("completedCount");
 
         if (completedCount) {
             completedCount.textContent = completedTasks.length;
         }
 
-        const notes =
-            await request("/notes/user/" + user.id);
+        const notes = await request("/notes/user/" + user.id);
 
-        const totalNotes =
-            document.getElementById("totalNotes");
+        const totalNotes = document.getElementById("totalNotes");
 
         if (totalNotes) {
             totalNotes.textContent = notes.length;
         }
 
-        const goals =
-            await request("/goals/user/" + user.id);
+        const goals = await request("/goals/user/" + user.id);
 
-        const totalGoals =
-            document.getElementById("totalGoals");
+        const totalGoals = document.getElementById("totalGoals");
 
         if (totalGoals) {
             totalGoals.textContent = goals.length;
@@ -888,8 +989,7 @@ async function loadDashboard() {
             completedGoalsElement.textContent = completedGoals.length;
         }
 
-        const upcoming =
-            document.getElementById("upcoming");
+        const upcoming = document.getElementById("upcoming");
 
         if (upcoming) {
 
@@ -918,7 +1018,6 @@ async function loadDashboard() {
                             Deadline: ${formatDate(task.deadline)}
                         </div>
                     `;
-
                 }).join("");
 
             } else {
@@ -931,8 +1030,7 @@ async function loadDashboard() {
 
         console.error("Dashboard error:", error);
 
-        const upcoming =
-            document.getElementById("upcoming");
+        const upcoming = document.getElementById("upcoming");
 
         if (upcoming) {
             upcoming.innerHTML =
@@ -947,9 +1045,7 @@ async function loadDashboard() {
 
 function formatDate(value) {
 
-    if (!value) {
-        return "Not set";
-    }
+    if (!value) return "Not set";
 
     const date = new Date(value);
 
