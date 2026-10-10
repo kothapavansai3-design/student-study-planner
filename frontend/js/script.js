@@ -28,6 +28,7 @@ function logout() {
 // ======================================================
 
 async function request(url, options = {}) {
+
     const response = await fetch(API + url, {
         ...options,
         headers: {
@@ -39,6 +40,7 @@ async function request(url, options = {}) {
     const text = await response.text();
 
     if (!response.ok) {
+
         let errorMessage = text || "Request failed";
 
         try {
@@ -86,6 +88,11 @@ document.addEventListener("DOMContentLoaded", function () {
         setupTasks();
     }
 
+    if (document.getElementById("goalForm")) {
+        requireLogin();
+        setupGoals();
+    }
+
     if (document.getElementById("subjectCount")) {
         requireLogin();
         loadDashboard();
@@ -97,27 +104,41 @@ document.addEventListener("DOMContentLoaded", function () {
 // ======================================================
 
 function setupRegister() {
+
     const registerForm = document.getElementById("registerForm");
 
     registerForm.onsubmit = async function (e) {
+
         e.preventDefault();
 
         const message = document.getElementById("message");
+
         message.textContent = "Creating your account...";
 
         try {
-            const name = document.getElementById("name").value.trim();
-            const email = document.getElementById("email").value.trim();
-            const password = document.getElementById("password").value;
+
+            const name =
+                document.getElementById("name").value.trim();
+
+            const email =
+                document.getElementById("email").value.trim();
+
+            const password =
+                document.getElementById("password").value;
+
             const studentCategory =
                 document.getElementById("studentCategory").value;
+
             const classYear =
                 document.getElementById("classYear").value;
 
             if (!studentCategory || !classYear) {
+
                 message.style.color = "red";
+
                 message.textContent =
                     "Please select your student category and class/year.";
+
                 return;
             }
 
@@ -142,9 +163,11 @@ function setupRegister() {
             }, 500);
 
         } catch (error) {
+
             console.error("Registration error:", error);
 
             message.style.color = "red";
+
             message.textContent =
                 "Registration failed: " + error.message;
         }
@@ -156,18 +179,25 @@ function setupRegister() {
 // ======================================================
 
 function setupLogin() {
+
     const loginForm = document.getElementById("loginForm");
 
     loginForm.onsubmit = async function (e) {
+
         e.preventDefault();
 
-        const email = document.getElementById("email").value.trim();
-        const password = document.getElementById("password").value;
+        const email =
+            document.getElementById("email").value.trim();
+
+        const password =
+            document.getElementById("password").value;
+
         const message = document.getElementById("message");
 
         message.textContent = "Logging in...";
 
         try {
+
             const user = await request("/users/login", {
                 method: "POST",
                 body: JSON.stringify({
@@ -179,6 +209,7 @@ function setupLogin() {
             saveUser(user);
 
             message.style.color = "green";
+
             message.textContent =
                 "Login successful! Opening dashboard...";
 
@@ -187,9 +218,11 @@ function setupLogin() {
             }, 500);
 
         } catch (error) {
+
             console.error("Login error:", error);
 
             message.style.color = "red";
+
             message.textContent =
                 "Login failed: " + error.message;
         }
@@ -201,6 +234,7 @@ function setupLogin() {
 // ======================================================
 
 async function setupSubjects() {
+
     const user = getUser();
 
     if (!user) {
@@ -216,11 +250,13 @@ async function setupSubjects() {
     }
 
     subjectForm.onsubmit = async function (e) {
+
         e.preventDefault();
 
         const message = document.getElementById("message");
 
         try {
+
             await request("/subjects", {
                 method: "POST",
                 body: JSON.stringify({
@@ -237,9 +273,11 @@ async function setupSubjects() {
             await loadSubjects(user.id);
 
         } catch (error) {
+
             console.error("Subject error:", error);
 
             message.style.color = "red";
+
             message.textContent =
                 "Could not add subject: " + error.message;
         }
@@ -251,23 +289,33 @@ async function setupSubjects() {
 // ======================================================
 
 async function loadSubjects(userId) {
+
     try {
-        const subjects = await request("/subjects/user/" + userId);
+
+        const subjects =
+            await request("/subjects/user/" + userId);
 
         console.log("Subjects received:", subjects);
 
         const subjectList = document.getElementById("subjectList");
 
         if (subjectList) {
+
             if (!Array.isArray(subjects) || subjects.length === 0) {
-                subjectList.innerHTML = "<p>No subjects added yet.</p>";
+
+                subjectList.innerHTML =
+                    "<p>No subjects added yet.</p>";
+
             } else {
+
                 subjectList.innerHTML = subjects.map(function (subject) {
+
                     return `
                         <div class="item">
                             <strong>${escapeHtml(subject.name)}</strong>
                         </div>
                     `;
+
                 }).join("");
             }
         }
@@ -275,9 +323,11 @@ async function loadSubjects(userId) {
         const subjectSelect = document.getElementById("subjectId");
 
         if (subjectSelect) {
+
             subjectSelect.innerHTML = "";
 
             const defaultOption = document.createElement("option");
+
             defaultOption.value = "";
             defaultOption.textContent = "Select Subject";
             defaultOption.disabled = true;
@@ -286,7 +336,9 @@ async function loadSubjects(userId) {
             subjectSelect.appendChild(defaultOption);
 
             if (Array.isArray(subjects)) {
+
                 subjects.forEach(function (subject) {
+
                     const option = document.createElement("option");
 
                     option.value = subject.id;
@@ -298,6 +350,7 @@ async function loadSubjects(userId) {
         }
 
     } catch (error) {
+
         console.error("Subject loading error:", error);
 
         const subjectList = document.getElementById("subjectList");
@@ -314,6 +367,7 @@ async function loadSubjects(userId) {
 // ======================================================
 
 async function setupTasks() {
+
     const user = getUser();
 
     if (!user) {
@@ -330,17 +384,21 @@ async function setupTasks() {
     }
 
     taskForm.onsubmit = async function (e) {
+
         e.preventDefault();
 
         const message = document.getElementById("message");
 
         try {
+
             const selectedSubject =
                 document.getElementById("subjectId").value;
 
             if (!selectedSubject) {
+
                 message.style.color = "red";
                 message.textContent = "Please select a subject.";
+
                 return;
             }
 
@@ -348,13 +406,10 @@ async function setupTasks() {
                 method: "POST",
                 body: JSON.stringify({
                     title: document.getElementById("taskTitle").value.trim(),
-                    description:
-                    document.getElementById("description").value,
+                    description: document.getElementById("description").value,
                     subjectId: Number(selectedSubject),
-                    deadline:
-                        document.getElementById("deadline").value || null,
-                    reminder:
-                        document.getElementById("reminder").value || null,
+                    deadline: document.getElementById("deadline").value || null,
+                    reminder: document.getElementById("reminder").value || null,
                     status: "PENDING"
                 })
             });
@@ -368,9 +423,11 @@ async function setupTasks() {
             await loadSubjects(user.id);
 
         } catch (error) {
+
             console.error("Task error:", error);
 
             message.style.color = "red";
+
             message.textContent =
                 "Could not add task: " + error.message;
         }
@@ -382,8 +439,11 @@ async function setupTasks() {
 // ======================================================
 
 async function loadTasks(userId) {
+
     try {
-        const tasks = await request("/tasks/user/" + userId);
+
+        const tasks =
+            await request("/tasks/user/" + userId);
 
         const taskList = document.getElementById("taskList");
 
@@ -392,15 +452,19 @@ async function loadTasks(userId) {
         }
 
         if (!Array.isArray(tasks) || tasks.length === 0) {
+
             taskList.innerHTML = "<p>No tasks added yet.</p>";
+
             return;
         }
 
         taskList.innerHTML = tasks.map(function (task) {
+
             const completed = task.status === "COMPLETED";
 
             return `
                 <div class="item ${completed ? "completed" : ""}">
+
                     <h3>${escapeHtml(task.title)}</h3>
 
                     <p>${escapeHtml(task.description || "")}</p>
@@ -427,21 +491,24 @@ async function loadTasks(userId) {
                     ${
                 !completed
                     ? `<button class="success"
-                                onclick="completeTask(${task.id})">
-                                Mark Completed
-                               </button>`
+                                   onclick="completeTask(${task.id})">
+                               Mark Completed
+                           </button>`
                     : ""
             }
 
                     <button class="danger"
-                        onclick="deleteTask(${task.id})">
+                            onclick="deleteTask(${task.id})">
                         Delete
                     </button>
+
                 </div>
             `;
+
         }).join("");
 
     } catch (error) {
+
         console.error("Task loading error:", error);
 
         const taskList = document.getElementById("taskList");
@@ -458,7 +525,9 @@ async function loadTasks(userId) {
 // ======================================================
 
 async function completeTask(id) {
+
     try {
+
         await request("/tasks/" + id + "/complete", {
             method: "PUT"
         });
@@ -470,7 +539,9 @@ async function completeTask(id) {
         }
 
     } catch (error) {
+
         console.error("Complete task error:", error);
+
         alert("Could not complete task: " + error.message);
     }
 }
@@ -480,11 +551,13 @@ async function completeTask(id) {
 // ======================================================
 
 async function deleteTask(id) {
+
     if (!confirm("Delete this task?")) {
         return;
     }
 
     try {
+
         await request("/tasks/" + id, {
             method: "DELETE"
         });
@@ -496,167 +569,13 @@ async function deleteTask(id) {
         }
 
     } catch (error) {
+
         console.error("Delete task error:", error);
+
         alert("Could not delete task: " + error.message);
     }
 }
 
-// ======================================================
-// DASHBOARD
-// ======================================================
-
-async function loadDashboard() {
-    const user = getUser();
-
-    if (!user) {
-        return;
-    }
-
-    const welcome = document.getElementById("welcome");
-
-    if (welcome) {
-        welcome.textContent = "Welcome, " + user.name + "!";
-    }
-
-    try {
-        const subjects = await request("/subjects/user/" + user.id);
-
-        const subjectCount = document.getElementById("subjectCount");
-
-        if (subjectCount) {
-            subjectCount.textContent = subjects.length;
-        }
-
-        const tasks = await request("/tasks/user/" + user.id);
-
-        const taskCount = document.getElementById("taskCount");
-
-        if (taskCount) {
-            taskCount.textContent = tasks.length;
-        }
-
-        const pendingTasks = tasks.filter(function (task) {
-            return task.status !== "COMPLETED";
-        });
-
-        const completedTasks = tasks.filter(function (task) {
-            return task.status === "COMPLETED";
-        });
-
-        const pendingCount = document.getElementById("pendingCount");
-
-        if (pendingCount) {
-            pendingCount.textContent = pendingTasks.length;
-        }
-
-        const completedCount = document.getElementById("completedCount");
-
-        if (completedCount) {
-            completedCount.textContent = completedTasks.length;
-        }
-
-        const notes = await request("/notes/user/" + user.id);
-
-        const totalNotes = document.getElementById("totalNotes");
-
-        if (totalNotes) {
-            totalNotes.textContent = notes.length;
-        }
-
-        const goals = await request("/goals/user/" + user.id);
-
-        const totalGoals = document.getElementById("totalGoals");
-
-        if (totalGoals) {
-            totalGoals.textContent = goals.length;
-        }
-
-        const completedGoals = goals.filter(function (goal) {
-            return goal.status === "Completed";
-        });
-
-        const completedGoalsElement =
-            document.getElementById("completedGoals");
-
-        if (completedGoalsElement) {
-            completedGoalsElement.textContent = completedGoals.length;
-        }
-
-        const upcoming = document.getElementById("upcoming");
-
-        if (upcoming) {
-            const upcomingTasks = tasks
-                .filter(function (task) {
-                    return task.status !== "COMPLETED";
-                })
-                .sort(function (a, b) {
-                    if (!a.deadline) return 1;
-                    if (!b.deadline) return -1;
-
-                    return new Date(a.deadline) - new Date(b.deadline);
-                })
-                .slice(0, 5);
-
-            if (upcomingTasks.length > 0) {
-                upcoming.innerHTML = upcomingTasks.map(function (task) {
-                    return `
-                        <div class="item">
-                            <b>${escapeHtml(task.title)}</b>
-                            <br>
-                            Deadline: ${formatDate(task.deadline)}
-                        </div>
-                    `;
-                }).join("");
-            } else {
-                upcoming.innerHTML = "<p>No pending tasks.</p>";
-            }
-        }
-
-    } catch (error) {
-        console.error("Dashboard error:", error);
-
-        const upcoming = document.getElementById("upcoming");
-
-        if (upcoming) {
-            upcoming.innerHTML =
-                "<p>Could not load dashboard data. Please refresh.</p>";
-        }
-    }
-}
-
-// ======================================================
-// FORMAT DATE
-// ======================================================
-
-function formatDate(value) {
-    if (!value) {
-        return "Not set";
-    }
-
-    const date = new Date(value);
-
-    if (Number.isNaN(date.getTime())) {
-        return "Not set";
-    }
-
-    return date.toLocaleString();
-}
-
-// ======================================================
-// ESCAPE HTML
-// ======================================================
-
-function escapeHtml(value) {
-    return String(value ?? "").replace(/[&<>"']/g, function (character) {
-        return {
-            "&": "&amp;",
-            "<": "&lt;",
-            ">": "&gt;",
-            '"': "&quot;",
-            "'": "&#039;"
-        }[character];
-    });
-}
 // ======================================================
 // GOALS PAGE
 // ======================================================
@@ -670,6 +589,7 @@ async function setupGoals() {
     }
 
     const goalForm = document.getElementById("goalForm");
+
     const goalMessage = document.getElementById("goalMessage");
 
     await loadGoals(user.id);
@@ -683,7 +603,8 @@ async function setupGoals() {
 
         try {
 
-            const title = document.getElementById("goalTitle").value.trim();
+            const title =
+                document.getElementById("goalTitle").value.trim();
 
             const description =
                 document.getElementById("goalDescription").value.trim();
@@ -691,19 +612,11 @@ async function setupGoals() {
             const targetDate =
                 document.getElementById("targetDate").value || null;
 
-            const progressValue =
-                Number(document.getElementById("progress").value || 0);
-
             if (!title) {
+
                 goalMessage.style.color = "red";
                 goalMessage.textContent = "Please enter a goal title.";
-                return;
-            }
 
-            if (progressValue < 0 || progressValue > 100) {
-                goalMessage.style.color = "red";
-                goalMessage.textContent =
-                    "Progress must be between 0 and 100.";
                 return;
             }
 
@@ -713,7 +626,6 @@ async function setupGoals() {
                     title: title,
                     description: description,
                     targetDate: targetDate,
-                    progress: progressValue,
                     priority: "Medium",
                     status: "In Progress",
                     userId: user.id
@@ -734,12 +646,12 @@ async function setupGoals() {
             console.error("Goal saving error:", error);
 
             goalMessage.style.color = "red";
+
             goalMessage.textContent =
                 "Could not save goal: " + error.message;
         }
     });
 }
-
 
 // ======================================================
 // LOAD GOALS
@@ -749,13 +661,19 @@ async function loadGoals(userId) {
 
     const goalsList = document.getElementById("goalsList");
 
+    if (!goalsList) {
+        return;
+    }
+
     try {
 
-        const goals = await request("/goals/user/" + userId);
+        const goals =
+            await request("/goals/user/" + userId);
 
         if (!Array.isArray(goals) || goals.length === 0) {
 
             goalsList.innerHTML = "<p>No goals added yet.</p>";
+
             return;
         }
 
@@ -778,8 +696,8 @@ async function loadGoals(userId) {
                     </p>
 
                     <p>
-                        <strong>Progress:</strong>
-                        ${Number(goal.progress || 0)}%
+                        <strong>Priority:</strong>
+                        ${escapeHtml(goal.priority || "Medium")}
                     </p>
 
                     <p>
@@ -821,7 +739,6 @@ async function loadGoals(userId) {
     }
 }
 
-
 // ======================================================
 // COMPLETE GOAL
 // ======================================================
@@ -847,7 +764,6 @@ async function completeGoal(id) {
         alert("Could not complete goal: " + error.message);
     }
 }
-
 
 // ======================================================
 // DELETE GOAL
@@ -877,4 +793,187 @@ async function deleteGoal(id) {
 
         alert("Could not delete goal: " + error.message);
     }
+}
+
+// ======================================================
+// DASHBOARD
+// ======================================================
+
+async function loadDashboard() {
+
+    const user = getUser();
+
+    if (!user) {
+        return;
+    }
+
+    const welcome = document.getElementById("welcome");
+
+    if (welcome) {
+        welcome.textContent = "Welcome, " + user.name + "!";
+    }
+
+    try {
+
+        const subjects =
+            await request("/subjects/user/" + user.id);
+
+        const subjectCount =
+            document.getElementById("subjectCount");
+
+        if (subjectCount) {
+            subjectCount.textContent = subjects.length;
+        }
+
+        const tasks =
+            await request("/tasks/user/" + user.id);
+
+        const taskCount =
+            document.getElementById("taskCount");
+
+        if (taskCount) {
+            taskCount.textContent = tasks.length;
+        }
+
+        const pendingTasks = tasks.filter(function (task) {
+            return task.status !== "COMPLETED";
+        });
+
+        const completedTasks = tasks.filter(function (task) {
+            return task.status === "COMPLETED";
+        });
+
+        const pendingCount =
+            document.getElementById("pendingCount");
+
+        if (pendingCount) {
+            pendingCount.textContent = pendingTasks.length;
+        }
+
+        const completedCount =
+            document.getElementById("completedCount");
+
+        if (completedCount) {
+            completedCount.textContent = completedTasks.length;
+        }
+
+        const notes =
+            await request("/notes/user/" + user.id);
+
+        const totalNotes =
+            document.getElementById("totalNotes");
+
+        if (totalNotes) {
+            totalNotes.textContent = notes.length;
+        }
+
+        const goals =
+            await request("/goals/user/" + user.id);
+
+        const totalGoals =
+            document.getElementById("totalGoals");
+
+        if (totalGoals) {
+            totalGoals.textContent = goals.length;
+        }
+
+        const completedGoals = goals.filter(function (goal) {
+            return goal.status === "Completed";
+        });
+
+        const completedGoalsElement =
+            document.getElementById("completedGoals");
+
+        if (completedGoalsElement) {
+            completedGoalsElement.textContent = completedGoals.length;
+        }
+
+        const upcoming =
+            document.getElementById("upcoming");
+
+        if (upcoming) {
+
+            const upcomingTasks = tasks
+                .filter(function (task) {
+                    return task.status !== "COMPLETED";
+                })
+                .sort(function (a, b) {
+
+                    if (!a.deadline) return 1;
+                    if (!b.deadline) return -1;
+
+                    return new Date(a.deadline) -
+                        new Date(b.deadline);
+                })
+                .slice(0, 5);
+
+            if (upcomingTasks.length > 0) {
+
+                upcoming.innerHTML = upcomingTasks.map(function (task) {
+
+                    return `
+                        <div class="item">
+                            <b>${escapeHtml(task.title)}</b>
+                            <br>
+                            Deadline: ${formatDate(task.deadline)}
+                        </div>
+                    `;
+
+                }).join("");
+
+            } else {
+
+                upcoming.innerHTML = "<p>No pending tasks.</p>";
+            }
+        }
+
+    } catch (error) {
+
+        console.error("Dashboard error:", error);
+
+        const upcoming =
+            document.getElementById("upcoming");
+
+        if (upcoming) {
+            upcoming.innerHTML =
+                "<p>Could not load dashboard data. Please refresh.</p>";
+        }
+    }
+}
+
+// ======================================================
+// FORMAT DATE
+// ======================================================
+
+function formatDate(value) {
+
+    if (!value) {
+        return "Not set";
+    }
+
+    const date = new Date(value);
+
+    if (Number.isNaN(date.getTime())) {
+        return "Not set";
+    }
+
+    return date.toLocaleString();
+}
+
+// ======================================================
+// ESCAPE HTML
+// ======================================================
+
+function escapeHtml(value) {
+
+    return String(value ?? "").replace(/[&<>"']/g, function (character) {
+
+        return {
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#039;"
+        }[character];
+    });
 }
