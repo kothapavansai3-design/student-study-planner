@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Account | Student Study Planner</title>
+  <link rel="stylesheet" href="js/css/style.css">
+
+  <style>
+    .auth-body {
+      background: #f0f6ff;
+      color: #1e293b;
+    }
+
+    .auth-navbar {
+      background: #ffffff;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .auth-brand {
+      color: #1d4ed8;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .brand-dot {
+      color: #60a5fa;
+    }
+
+    .auth-nav-links a {
+      text-decoration: none;
+    }
+
+    .auth-nav-links .auth-register {
+      background: #2563eb;
+      color: white;
+      padding: 10px 18px;
+      border-radius: 8px;
+    }
+
+    .auth-main {
+      gap: 40px;
+    }
+
+    .auth-intro h1 span {
+      color: #2563eb;
+    }
+
+    .intro-tag {
+      color: #2563eb;
+      background: #dbeafe;
+      padding: 8px 12px;
+      border-radius: 20px;
+      display: inline-block;
+    }
+
+    .register-step > span,
+    .register-stamp {
+      color: #2563eb;
+    }
+
+    .auth-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 18px;
+      box-shadow: 0 10px 35px rgba(37, 99, 235, 0.08);
+    }
+
+    .auth-card-icon {
+      background: #dbeafe;
+      color: #1d4ed8;
+      border-radius: 12px;
+    }
+
+    .auth-card h2 {
+      color: #1e3a8a;
+    }
+
+    .auth-subtitle {
+      color: #64748b;
+    }
+
+    .auth-field {
+      margin-bottom: 16px;
+    }
+
+    .auth-field label {
+      display: block;
+      margin-bottom: 7px;
+      color: #334155;
+      font-weight: 600;
+    }
+
+    .auth-field input,
+    .auth-field select {
+      box-sizing: border-box;
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid #cbd5e1;
+      border-radius: 9px;
+      background: #ffffff;
+      color: #1e293b;
+      font: inherit;
+      outline: none;
+    }
+
+    .auth-field input:focus,
+    .auth-field select:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+
+    .auth-submit {
+      width: 100%;
+      padding: 13px;
+      border: none;
+      border-radius: 9px;
+      background: #2563eb;
+      color: #ffffff;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .auth-submit:hover {
+      background: #1d4ed8;
+    }
+
+    .auth-create a,
+    .auth-back {
+      color: #2563eb;
+    }
+
+    .auth-message {
+      color: #dc2626;
+    }
+
+    .auth-footer {
+      color: #64748b;
+    }
+
+    @media (max-width: 850px) {
+      .auth-main {
+        flex-direction: column;
+        padding: 25px 16px;
+      }
+
+      .auth-intro,
+      .auth-card {
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      .auth-nav-links {
+        gap: 10px;
+      }
+    }
+  </style>
+</head>
+
+<body class="auth-body">
+
+<nav class="auth-navbar">
+  <a href="index.html" class="auth-brand">
+    <span class="brand-icon">📘</span>
+    <span>Student Study Planner<span class="brand-dot">.</span></span>
+  </a>
+
+  <div class="auth-nav-links">
+    <a href="index.html">Home</a>
+    <a href="login.html">Sign in</a>
+    <a href="register.html" class="auth-register">Get Started</a>
+  </div>
+</nav>
+
+<main class="auth-main register-main">
+
+  <section class="auth-intro">
+    <span class="intro-tag">START WITH A PLAN</span>
+
+    <h1>
+      Small steps.<br>
+      <span>Big achievements.</span>
+    </h1>
+
+    <p>
+      Plan your studies, organize your subjects, manage assignments,
+      and prepare for exams with Student Study Planner.
+    </p>
+
+    <div class="register-steps">
+
+      <div class="register-step">
+        <span>01</span>
+        <div>
+          <strong>Organize your studies</strong>
+          <small>Keep your subjects and tasks in one place.</small>
+        </div>
+      </div>
+
+      <div class="register-step">
+        <span>02</span>
+        <div>
+          <strong>Manage your time</strong>
+          <small>Plan your study sessions and deadlines.</small>
+        </div>
+      </div>
+
+      <div class="register-step">
+        <span>03</span>
+        <div>
+          <strong>Track your progress</strong>
+          <small>Complete tasks and reach your study goals.</small>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="register-stamp">
+      📚 YOUR SPACE TO LEARN
+    </div>
+  </section>
+
+  <section class="auth-card register-card">
+
+    <div class="auth-card-icon">📚</div>
+
+    <h2>Create your account</h2>
+
+    <p class="auth-subtitle">
+      Start organizing your learning journey today.
+    </p>
+
+    <form id="registerForm">
+
+      <div class="auth-field">
+        <label for="name">Full Name</label>
+        <input
+                id="name"
+                type="text"
+                placeholder="Enter your full name"
+                autocomplete="name"
+                required
+        >
+      </div>
+
+      <div class="auth-field">
+        <label for="email">Email Address</label>
+        <input
+                id="email"
+                type="email"
+                placeholder="you@example.com"
+                autocomplete="email"
+                required
+        >
+      </div>
+
+      <div class="auth-field">
+        <label for="password">Create Password</label>
+        <input
+                id="password"
+                type="password"
+                placeholder="Create a password"
+                autocomplete="new-password"
+                minlength="6"
+                required
+        >
+      </div>
+
+      <div class="auth-field">
+        <label for="studentCategory">Student Category</label>
+
+        <select id="studentCategory" name="studentCategory" required>
+          <option value="">Select your category</option>
+          <option value="10th">10th Class</option>
+          <option value="Intermediate">Intermediate (11th / 12th)</option>
+          <option value="Diploma">Diploma</option>
+          <option value="B.Tech">B.Tech</option>
+        </select>
+      </div>
+
+      <div class="auth-field">
+        <label for="classYear">Class / Year</label>
+
+        <select id="classYear" name="classYear" required>
+          <option value="">Select your class or year</option>
+        </select>
+      </div>
+
+      <button type="submit" class="auth-submit">
+        Create Account →
+      </button>
+
+    </form>
+
+    <p id="message" class="auth-message" role="status"></p>
+
+    <div class="auth-divider">
+      <span>YOUR STUDY JOURNEY STARTS HERE</span>
+    </div>
+
+    <p class="auth-create">
+      Already have an account?
+      <a href="login.html">Sign in</a>
+    </p>
+
+    <a href="index.html" class="auth-back">← Back to Home</a>
+
+  </section>
+
+</main>
+
+<footer class="auth-footer">
+  Plan your studies. Make progress. Achieve your goals. 📘
+</footer>
+
+<script>
+  const categorySelect = document.getElementById("studentCategory");
+  const classYearSelect = document.getElementById("classYear");
+
+  const classOptions = {
+    "10th": ["10th Class"],
+    "Intermediate": ["1st Year", "2nd Year"],
+    "Diploma": ["1st Year", "2nd Year", "3rd Year"],
+    "B.Tech": ["1st Year", "2nd Year", "3rd Year", "4th Year"]
+  };
+
+  categorySelect.addEventListener("change", function () {
+    const category = this.value;
+
+    classYearSelect.innerHTML =
+            '<option value="">Select your class or year</option>';
+
+    if (classOptions[category]) {
+      classOptions[category].forEach(function (item) {
+        const option = document.createElement("option");
+        option.value = item;
+        option.textContent = item;
+        classYearSelect.appendChild(option);
+      });
+    }
+  });
+</script>
+
+<script src="js/script.js"></script>
+
+</body>
+</html>

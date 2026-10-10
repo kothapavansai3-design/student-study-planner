@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Tasks - Student Study Planner</title>
+
+  <link rel="stylesheet" href="js/css/style.css">
+</head>
+
+<body>
+
+<header class="navbar">
+
+  <div class="logo">
+    🎓
+    <span>Student Study Planner</span>
+  </div>
+
+  <nav class="desktop-nav">
+
+    <a href="dashboard.html">🏠 Dashboard</a>
+
+    <a href="subjects.html">📚 Subjects</a>
+
+    <a href="tasks.html" class="active">📝 Tasks</a>
+
+    <a href="notes.html">📒 Notes</a>
+
+    <a href="goals.html">🎯 Goals</a>
+
+    <a href="profile.html">👤 Profile</a>
+
+    <button onclick="logout()" class="logout-btn">
+      Logout
+    </button>
+
+  </nav>
+
+  <button class="mobile-menu-btn"
+          onclick="toggleMobileMenu()">
+    ☰
+  </button>
+
+</header>
+
+
+<!-- MOBILE MENU -->
+
+<div id="mobileMenu" class="mobile-menu">
+
+  <a href="dashboard.html">🏠 Home</a>
+  <a href="subjects.html">📚 Subjects</a>
+  <a href="tasks.html">📝 Tasks</a>
+  <a href="notes.html">📒 Notes</a>
+  <a href="goals.html">🎯 Goals</a>
+  <a href="profile.html">👤 Profile</a>
+
+  <button onclick="logout()">🚪 Logout</button>
+
+</div>
+
+
+<main class="page-container">
+
+  <!-- PAGE HEADER -->
+
+  <section class="page-header">
+
+    <div>
+
+      <h1>📝 My Tasks</h1>
+
+      <p>
+        Manage your study tasks, deadlines and reminders.
+      </p>
+
+    </div>
+
+    <div class="page-header-icon">
+      ✅
+    </div>
+
+  </section>
+
+
+  <!-- ADD TASK -->
+
+  <section class="form-card">
+
+    <div class="section-title">
+
+      <div class="section-icon blue-icon">
+        ➕
+      </div>
+
+      <div>
+
+        <h2>Add New Task</h2>
+
+        <p>
+          Create a task and connect it to a subject.
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <form id="taskForm">
+
+      <div class="form-grid">
+
+        <div class="input-group">
+
+          <label for="taskTitle">
+            Task Title
+          </label>
+
+          <input
+                  type="text"
+                  id="taskTitle"
+                  placeholder="Example: Complete Java Assignment"
+                  required>
+
+        </div>
+
+
+        <div class="input-group">
+
+          <label for="subjectId">
+            Subject
+          </label>
+
+          <select id="subjectId" required>
+
+            <option value="">
+              Select Subject
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <div class="input-group full-width">
+
+          <label for="description">
+            Description
+          </label>
+
+          <textarea
+                  id="description"
+                  placeholder="Enter task details..."
+                  rows="4"></textarea>
+
+        </div>
+
+
+        <div class="input-group">
+
+          <label for="deadline">
+            Deadline
+          </label>
+
+          <input
+                  type="datetime-local"
+                  id="deadline">
+
+        </div>
+
+
+        <div class="input-group">
+
+          <label for="reminder">
+            Reminder
+          </label>
+
+          <input
+                  type="datetime-local"
+                  id="reminder">
+
+        </div>
+
+      </div>
+
+
+      <button
+              type="submit"
+              class="primary-btn task-submit">
+
+        ➕ Add Task
+
+      </button>
+
+    </form>
+
+
+    <p id="message" class="message"></p>
+
+  </section>
+
+
+  <!-- TASK LIST -->
+
+  <section class="content-card">
+
+    <div class="card-heading">
+
+      <div>
+
+        <h2>📋 My Tasks</h2>
+
+        <p>
+          Track your pending and completed tasks.
+        </p>
+
+      </div>
+
+      <span class="small-badge">
+                Tasks
+            </span>
+
+    </div>
+
+
+    <div id="taskList">
+
+      <!-- Tasks loaded by JavaScript -->
+
+    </div>
+
+  </section>
+
+</main>
+
+
+<!-- MOBILE BOTTOM NAV -->
+
+<nav class="mobile-bottom-nav">
+
+  <a href="dashboard.html">
+    <span>🏠</span>
+    <small>Home</small>
+  </a>
+
+  <a href="subjects.html">
+    <span>📚</span>
+    <small>Subjects</small>
+  </a>
+
+  <a href="tasks.html" class="mobile-nav-active">
+    <span>📝</span>
+    <small>Tasks</small>
+  </a>
+
+  <a href="notes.html">
+    <span>📒</span>
+    <small>Notes</small>
+  </a>
+
+  <a href="goals.html">
+    <span>🎯</span>
+    <small>Goals</small>
+  </a>
+
+</nav>
+
+
+<script src="js/script.js"></script>
+
+<script>
+
+  function toggleMobileMenu() {
+
+    const menu =
+            document.getElementById("mobileMenu");
+
+    menu.classList.toggle("show");
+
+  }
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Student Study Planner - Login</title>
+
+  <!-- CSS file -->
+  <link rel="stylesheet" href="js/css/style.css">
+</head>
+
+<body class="auth-body">
+
+<!-- Navigation -->
+<nav class="auth-navbar">
+  <a href="index.html" class="auth-brand">
+    <span class="brand-icon">🎓</span>
+    Student Study Planner
+  </a>
+
+  <div class="auth-nav-links">
+    <a href="index.html">Home</a>
+    <a href="login.html" class="auth-active">Sign in</a>
+    <a href="register.html" class="auth-register">Get Started</a>
+  </div>
+</nav>
+
+<!-- Main Content -->
+<main class="auth-main">
+
+  <!-- Left Section -->
+  <section class="auth-intro">
+    <span class="intro-tag">A CLEARER WAY TO LEARN</span>
+
+    <h1>
+      Make room<br>
+      for your <span>next big idea.</span>
+    </h1>
+
+    <p>
+      Your studies, thoughtfully organized.
+      Pick up where you left off and make today count.
+    </p>
+
+    <div class="intro-features">
+
+      <div class="intro-feature">
+        <span>📚</span>
+        <div>
+          <strong>Organize your studies</strong>
+          <small>Keep all your subjects in one place.</small>
+        </div>
+      </div>
+
+      <div class="intro-feature">
+        <span>📝</span>
+        <div>
+          <strong>Manage your tasks</strong>
+          <small>Track assignments and deadlines.</small>
+        </div>
+      </div>
+
+      <div class="intro-feature">
+        <span>🎯</span>
+        <div>
+          <strong>Achieve your goals</strong>
+          <small>Make steady progress every day.</small>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Login Card -->
+  <section class="auth-card">
+
+    <div class="auth-card-icon">🎓</div>
+
+    <h2>Welcome back</h2>
+
+    <p class="auth-subtitle">
+      Sign in and get back into your rhythm.
+    </p>
+
+    <form id="loginForm">
+
+      <div class="auth-field">
+        <label for="email">Email address</label>
+        <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="you@example.com"
+                required
+        >
+      </div>
+
+      <div class="auth-field">
+        <label for="password">Password</label>
+        <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="Enter your password"
+                required
+        >
+      </div>
+
+      <button type="submit" class="auth-submit">
+        Sign in <span>→</span>
+      </button>
+
+      <p id="message" class="auth-message"></p>
+
+    </form>
+
+    <div class="auth-divider">
+      YOUR NEXT CHAPTER STARTS HERE
+    </div>
+
+    <p class="auth-create">
+      New student?
+      <a href="register.html">Create an account</a>
+    </p>
+
+    <a href="index.html" class="auth-back">
+      ← Back to home
+    </a>
+
+  </section>
+
+</main>
+
+<footer class="auth-footer">
+  Made for the things you're working toward 💙
+</footer>
+
+<!-- Existing JavaScript -->
+<script src="js/script.js"></script>
+
+</body>
+</html>

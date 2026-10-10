@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Profile - Student Study Planner</title>
+
+    <link rel="stylesheet" href="js/css/style.css">
+
+</head>
+
+<body>
+
+
+<!-- ================= NAVBAR ================= -->
+
+<header class="navbar">
+
+    <div class="logo">
+        🎓
+        <span>Student Study Planner</span>
+    </div>
+
+
+    <nav class="desktop-nav">
+
+        <a href="dashboard.html">
+            🏠 Dashboard
+        </a>
+
+        <a href="subjects.html">
+            📚 Subjects
+        </a>
+
+        <a href="tasks.html">
+            📝 Tasks
+        </a>
+
+        <a href="notes.html">
+            📒 Notes
+        </a>
+
+        <a href="goals.html">
+            🎯 Goals
+        </a>
+
+        <a href="profile.html" class="active">
+            👤 Profile
+        </a>
+
+        <button
+                onclick="logout()"
+                class="logout-btn">
+
+            Logout
+
+        </button>
+
+    </nav>
+
+
+    <button
+            class="mobile-menu-btn"
+            onclick="toggleMobileMenu()">
+
+        ☰
+
+    </button>
+
+</header>
+
+
+<!-- ================= MOBILE MENU ================= -->
+
+<div id="mobileMenu" class="mobile-menu">
+
+    <a href="dashboard.html">
+        🏠 Home
+    </a>
+
+    <a href="subjects.html">
+        📚 Subjects
+    </a>
+
+    <a href="tasks.html">
+        📝 Tasks
+    </a>
+
+    <a href="notes.html">
+        📒 Notes
+    </a>
+
+    <a href="goals.html">
+        🎯 Goals
+    </a>
+
+    <a href="profile.html">
+        👤 Profile
+    </a>
+
+    <button onclick="logout()">
+        🚪 Logout
+    </button>
+
+</div>
+
+
+<!-- ================= MAIN ================= -->
+
+<main class="page-container">
+
+
+    <!-- PAGE HEADER -->
+
+    <section class="page-header">
+
+        <div>
+
+            <h1>
+                👤 My Profile
+            </h1>
+
+            <p>
+                Manage your Student Study Planner profile.
+            </p>
+
+        </div>
+
+
+        <div class="page-header-icon">
+            👨‍🎓
+        </div>
+
+    </section>
+
+
+    <!-- ================= PROFILE CARD ================= -->
+
+    <section class="profile-card">
+
+
+        <div class="profile-avatar">
+            👨‍🎓
+        </div>
+
+
+        <div class="profile-main-info">
+
+            <h2 id="profileName">
+                Student
+            </h2>
+
+            <p id="profileEmail">
+                student@example.com
+            </p>
+
+            <span class="profile-role">
+                🎓 BTech Student
+            </span>
+
+        </div>
+
+
+    </section>
+
+
+    <!-- ================= STUDENT INFORMATION ================= -->
+
+    <section class="content-card">
+
+        <div class="card-heading">
+
+            <div>
+
+                <h2>
+                    🎓 Student Information
+                </h2>
+
+                <p>
+                    Your basic academic information.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="profile-info-grid">
+
+
+            <div class="profile-info-item">
+
+                <span class="info-icon">
+                    👤
+                </span>
+
+                <div>
+
+                    <small>
+                        Name
+                    </small>
+
+                    <strong id="infoName">
+                        Student
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="profile-info-item">
+
+                <span class="info-icon">
+                    📧
+                </span>
+
+                <div>
+
+                    <small>
+                        Email
+                    </small>
+
+                    <strong id="infoEmail">
+                        student@example.com
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="profile-info-item">
+
+                <span class="info-icon">
+                    🎓
+                </span>
+
+                <div>
+
+                    <small>
+                        Degree
+                    </small>
+
+                    <strong>
+                        B.Tech
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="profile-info-item">
+
+                <span class="info-icon">
+                    💻
+                </span>
+
+                <div>
+
+                    <small>
+                        Branch
+                    </small>
+
+                    <strong>
+                        Information Technology
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= STUDY STATS ================= -->
+
+    <section class="content-card">
+
+        <div class="card-heading">
+
+            <div>
+
+                <h2>
+                    📊 My Study Overview
+                </h2>
+
+                <p>
+                    Quick view of your study planner.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="profile-stats">
+
+
+            <a
+                    href="subjects.html"
+                    class="profile-stat blue-stat">
+
+                <span>
+                    📚
+                </span>
+
+                <div>
+
+                    <strong id="profileSubjects">
+                        0
+                    </strong>
+
+                    <small>
+                        Subjects
+                    </small>
+
+                </div>
+
+            </a>
+
+
+            <a
+                    href="tasks.html"
+                    class="profile-stat pink-stat">
+
+                <span>
+                    📝
+                </span>
+
+                <div>
+
+                    <strong id="profileTasks">
+                        0
+                    </strong>
+
+                    <small>
+                        Tasks
+                    </small>
+
+                </div>
+
+            </a>
+
+
+            <a
+                    href="notes.html"
+                    class="profile-stat purple-stat">
+
+                <span>
+                    📒
+                </span>
+
+                <div>
+
+                    <strong id="profileNotes">
+                        0
+                    </strong>
+
+                    <small>
+                        Notes
+                    </small>
+
+                </div>
+
+            </a>
+
+
+            <a
+                    href="goals.html"
+                    class="profile-stat green-stat">
+
+                <span>
+                    🎯
+                </span>
+
+                <div>
+
+                    <strong id="profileGoals">
+                        0
+                    </strong>
+
+                    <small>
+                        Goals
+                    </small>
+
+                </div>
+
+            </a>
+
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= ACCOUNT ================= -->
+
+    <section class="content-card account-card">
+
+        <div class="card-heading">
+
+            <div>
+
+                <h2>
+                    ⚙️ Account
+                </h2>
+
+                <p>
+                    Manage your planner account.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <button
+                onclick="logout()"
+                class="profile-logout-btn">
+
+            🚪 Logout from Account
+
+        </button>
+
+    </section>
+
+
+</main>
+
+
+<!-- ================= MOBILE BOTTOM NAV ================= -->
+
+<nav class="mobile-bottom-nav">
+
+
+    <a href="dashboard.html">
+
+        <span>
+            🏠
+        </span>
+
+        <small>
+            Home
+        </small>
+
+    </a>
+
+
+    <a href="subjects.html">
+
+        <span>
+            📚
+        </span>
+
+        <small>
+            Subjects
+        </small>
+
+    </a>
+
+
+    <a href="tasks.html">
+
+        <span>
+            📝
+        </span>
+
+        <small>
+            Tasks
+        </small>
+
+    </a>
+
+
+    <a href="notes.html">
+
+        <span>
+            📒
+        </span>
+
+        <small>
+            Notes
+        </small>
+
+    </a>
+
+
+    <a href="goals.html">
+
+        <span>
+            🎯
+        </span>
+
+        <small>
+            Goals
+        </small>
+
+    </a>
+
+
+</nav>
+
+
+<script src="js/script.js"></script>
+
+
+<script>
+
+    /* ================= MOBILE MENU ================= */
+
+    function toggleMobileMenu() {
+
+        document
+            .getElementById("mobileMenu")
+            .classList.toggle("show");
+
+    }
+
+
+    /* ================= PROFILE DATA ================= */
+
+    document.addEventListener("DOMContentLoaded", async function () {
+
+        const user = getUser();
+
+        if (!user) {
+
+            window.location.href = "login.html";
+
+            return;
+
+        }
+
+
+        /* USER INFORMATION */
+
+        document.getElementById("profileName").textContent =
+            user.name || "Student";
+
+        document.getElementById("profileEmail").textContent =
+            user.email || "student@example.com";
+
+        document.getElementById("infoName").textContent =
+            user.name || "Student";
+
+        document.getElementById("infoEmail").textContent =
+            user.email || "student@example.com";
+
+
+        /* LOAD STUDY STATISTICS */
+
+        try {
+
+            const subjects =
+                await request("/subjects/user/" + user.id);
+
+            const tasks =
+                await request("/tasks/user/" + user.id);
+
+
+            document.getElementById("profileSubjects")
+                .textContent = subjects.length;
+
+
+            document.getElementById("profileTasks")
+                .textContent = tasks.length;
+
+
+            /* NOTES */
+
+            try {
+
+                const notes =
+                    await request("/notes/user/" + user.id);
+
+                document.getElementById("profileNotes")
+                    .textContent = notes.length;
+
+            } catch (error) {
+
+                document.getElementById("profileNotes")
+                    .textContent = "0";
+
+            }
+
+
+            /* GOALS */
+
+            try {
+
+                const goals =
+                    await request("/goals/user/" + user.id);
+
+                document.getElementById("profileGoals")
+                    .textContent = goals.length;
+
+            } catch (error) {
+
+                document.getElementById("profileGoals")
+                    .textContent = "0";
+
+            }
+
+        } catch (error) {
+
+            console.log(
+                "Could not load profile statistics:",
+                error
+            );
+
+        }
+
+    });
+
+</script>
+
+
+</body>
+</html>

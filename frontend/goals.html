@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Goals - Student Study Planner</title>
+
+    <link rel="stylesheet" href="js/css/style.css">
+
+</head>
+
+<body>
+
+
+<header class="navbar">
+
+    <div class="logo">
+        🎓
+        <span>Student Study Planner</span>
+    </div>
+
+
+    <nav class="desktop-nav">
+
+        <a href="dashboard.html">🏠 Dashboard</a>
+
+        <a href="subjects.html">📚 Subjects</a>
+
+        <a href="tasks.html">📝 Tasks</a>
+
+        <a href="notes.html">📒 Notes</a>
+
+        <a href="goals.html" class="active">🎯 Goals</a>
+
+        <a href="profile.html">👤 Profile</a>
+
+        <button onclick="logout()" class="logout-btn">
+            Logout
+        </button>
+
+    </nav>
+
+
+    <button
+            class="mobile-menu-btn"
+            onclick="toggleMobileMenu()">
+
+        ☰
+
+    </button>
+
+</header>
+
+
+<!-- MOBILE MENU -->
+
+<div id="mobileMenu" class="mobile-menu">
+
+    <a href="dashboard.html">🏠 Home</a>
+
+    <a href="subjects.html">📚 Subjects</a>
+
+    <a href="tasks.html">📝 Tasks</a>
+
+    <a href="notes.html">📒 Notes</a>
+
+    <a href="goals.html">🎯 Goals</a>
+
+    <a href="profile.html">👤 Profile</a>
+
+    <button onclick="logout()">🚪 Logout</button>
+
+</div>
+
+
+<main class="page-container">
+
+
+    <!-- HEADER -->
+
+    <section class="page-header">
+
+        <div>
+
+            <h1>🎯 My Goals</h1>
+
+            <p>
+                Set study goals and track your progress.
+            </p>
+
+        </div>
+
+
+        <div class="page-header-icon">
+            🏆
+        </div>
+
+    </section>
+
+
+    <!-- ADD GOAL -->
+
+    <section class="form-card">
+
+
+        <div class="section-title">
+
+            <div class="section-icon green-icon">
+                🎯
+            </div>
+
+
+            <div>
+
+                <h2>Create a Goal</h2>
+
+                <p>
+                    Set a target that you want to achieve.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <form id="goalForm">
+
+
+            <div class="input-group">
+
+                <label for="goalTitle">
+                    Goal
+                </label>
+
+                <input
+                        type="text"
+                        id="goalTitle"
+                        placeholder="Example: Complete DSA Unit 3"
+                        required>
+
+            </div>
+
+
+            <div class="input-group">
+
+                <label for="goalDescription">
+                    Description
+                </label>
+
+                <textarea
+                        id="goalDescription"
+                        rows="4"
+                        placeholder="Describe your goal..."></textarea>
+
+            </div>
+
+
+            <div class="goal-form-grid">
+
+
+                <div class="input-group">
+
+                    <label for="targetDate">
+                        Target Date
+                    </label>
+
+                    <input
+                            type="date"
+                            id="targetDate">
+
+                </div>
+
+
+                <div class="input-group">
+
+                    <label for="progress">
+                        Progress (%)
+                    </label>
+
+                    <input
+                            type="number"
+                            id="progress"
+                            min="0"
+                            max="100"
+                            value="0">
+
+                </div>
+
+
+            </div>
+
+
+            <button
+                    type="submit"
+                    class="primary-btn goal-submit">
+
+                🎯 Add Goal
+
+            </button>
+
+        </form>
+
+
+        <p id="goalMessage" class="message"></p>
+
+    </section>
+
+
+    <!-- GOALS -->
+
+    <section class="content-card">
+
+
+        <div class="card-heading">
+
+            <div>
+
+                <h2>🏆 My Goals</h2>
+
+                <p>
+                    Keep working towards your targets.
+                </p>
+
+            </div>
+
+
+            <span class="small-badge">
+                Goals
+            </span>
+
+        </div>
+
+
+        <div
+                id="goalsList"
+                class="goals-grid">
+
+            <!-- Goals loaded here -->
+
+        </div>
+
+
+    </section>
+
+
+</main>
+
+
+<!-- MOBILE BOTTOM NAV -->
+
+<nav class="mobile-bottom-nav">
+
+
+    <a href="dashboard.html">
+
+        <span>🏠</span>
+
+        <small>Home</small>
+
+    </a>
+
+
+    <a href="subjects.html">
+
+        <span>📚</span>
+
+        <small>Subjects</small>
+
+    </a>
+
+
+    <a href="tasks.html">
+
+        <span>📝</span>
+
+        <small>Tasks</small>
+
+    </a>
+
+
+    <a href="notes.html">
+
+        <span>📒</span>
+
+        <small>Notes</small>
+
+    </a>
+
+
+    <a
+            href="goals.html"
+            class="mobile-nav-active">
+
+        <span>🎯</span>
+
+        <small>Goals</small>
+
+    </a>
+
+
+</nav>
+
+
+<script src="js/script.js"></script>
+
+
+<script>
+
+    function toggleMobileMenu() {
+
+        document
+            .getElementById("mobileMenu")
+            .classList.toggle("show");
+
+    }
+
+</script>
+
+
+</body>
+</html>

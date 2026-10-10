@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+  <title>Subjects - Student Study Planner</title>
+
+  <link rel="stylesheet" href="js/css/style.css">
+
+</head>
+
+<body>
+
+<!-- ================= NAVBAR ================= -->
+
+<header class="navbar">
+
+  <div class="logo">
+    🎓
+    <span>Student Study Planner</span>
+  </div>
+
+  <nav class="desktop-nav">
+
+    <a href="dashboard.html">
+      🏠 Dashboard
+    </a>
+
+    <a href="subjects.html"
+       class="active">
+      📚 Subjects
+    </a>
+
+    <a href="tasks.html">
+      📝 Tasks
+    </a>
+
+    <a href="notes.html">
+      📒 Notes
+    </a>
+
+    <a href="goals.html">
+      🎯 Goals
+    </a>
+
+    <a href="profile.html">
+      👤 Profile
+    </a>
+
+    <button
+            onclick="logout()"
+            class="logout-btn">
+
+      Logout
+
+    </button>
+
+  </nav>
+
+
+  <button
+          class="mobile-menu-btn"
+          onclick="toggleMobileMenu()">
+
+    ☰
+
+  </button>
+
+</header>
+
+
+<!-- ================= MOBILE MENU ================= -->
+
+<div id="mobileMenu"
+     class="mobile-menu">
+
+  <a href="dashboard.html">
+    🏠 Home
+  </a>
+
+  <a href="subjects.html">
+    📚 Subjects
+  </a>
+
+  <a href="tasks.html">
+    📝 Tasks
+  </a>
+
+  <a href="notes.html">
+    📒 Notes
+  </a>
+
+  <a href="goals.html">
+    🎯 Goals
+  </a>
+
+  <a href="profile.html">
+    👤 Profile
+  </a>
+
+  <button onclick="logout()">
+    🚪 Logout
+  </button>
+
+</div>
+
+
+<!-- ================= MAIN ================= -->
+
+<main class="page-container">
+
+
+  <!-- PAGE HEADER -->
+
+  <section class="page-header">
+
+    <div>
+
+      <h1>
+        📚 My Subjects
+      </h1>
+
+      <p>
+        Organize your subjects and keep your study plan simple.
+      </p>
+
+    </div>
+
+    <div class="page-header-icon">
+      📖
+    </div>
+
+  </section>
+
+
+  <!-- ================= ADD SUBJECT ================= -->
+
+  <section class="form-card">
+
+    <div class="section-title">
+
+      <div class="section-icon blue-icon">
+        ➕
+      </div>
+
+      <div>
+
+        <h2>
+          Add New Subject
+        </h2>
+
+        <p>
+          Add a subject to your study planner.
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <form id="subjectForm"
+          class="subject-form">
+
+      <div class="input-group">
+
+        <label for="subjectName">
+          Subject Name
+        </label>
+
+        <input
+                type="text"
+                id="subjectName"
+                placeholder="Example: Java"
+                required>
+
+      </div>
+
+
+      <button
+              type="submit"
+              class="primary-btn">
+
+        ➕ Add Subject
+
+      </button>
+
+    </form>
+
+
+    <p id="message"
+       class="message">
+    </p>
+
+  </section>
+
+
+  <!-- ================= SUBJECT LIST ================= -->
+
+  <section class="content-card">
+
+    <div class="card-heading">
+
+      <div>
+
+        <h2>
+          📚 My Subjects
+        </h2>
+
+        <p>
+          Your saved subjects appear here.
+        </p>
+
+      </div>
+
+      <span class="small-badge">
+                Subjects
+            </span>
+
+    </div>
+
+
+    <div id="subjectList"
+         class="subject-grid">
+
+      <!-- JavaScript loads subjects here -->
+
+    </div>
+
+  </section>
+
+
+</main>
+
+
+<!-- ================= MOBILE BOTTOM NAV ================= -->
+
+<nav class="mobile-bottom-nav">
+
+  <a href="dashboard.html">
+
+    <span>🏠</span>
+    <small>Home</small>
+
+  </a>
+
+
+  <a href="subjects.html"
+     class="mobile-nav-active">
+
+    <span>📚</span>
+    <small>Subjects</small>
+
+  </a>
+
+
+  <a href="tasks.html">
+
+    <span>📝</span>
+    <small>Tasks</small>
+
+  </a>
+
+
+  <a href="notes.html">
+
+    <span>📒</span>
+    <small>Notes</small>
+
+  </a>
+
+
+  <a href="goals.html">
+
+    <span>🎯</span>
+    <small>Goals</small>
+
+  </a>
+
+</nav>
+
+
+<script src="js/script.js"></script>
+
+
+<script>
+
+  function toggleMobileMenu() {
+
+    const menu =
+            document.getElementById("mobileMenu");
+
+    menu.classList.toggle("show");
+
+  }
+
+</script>
+
+</body>
+
+</html>

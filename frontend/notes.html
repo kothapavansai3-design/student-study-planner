@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Notes - Student Study Planner</title>
+
+    <link rel="stylesheet" href="js/css/style.css">
+</head>
+
+<body>
+
+<header class="navbar">
+
+    <div class="logo">
+        🎓
+        <span>Student Study Planner</span>
+    </div>
+
+    <nav class="desktop-nav">
+
+        <a href="dashboard.html">🏠 Dashboard</a>
+        <a href="subjects.html">📚 Subjects</a>
+        <a href="tasks.html">📝 Tasks</a>
+        <a href="notes.html" class="active">📒 Notes</a>
+        <a href="goals.html">🎯 Goals</a>
+        <a href="profile.html">👤 Profile</a>
+
+        <button onclick="logout()" class="logout-btn">
+            Logout
+        </button>
+
+    </nav>
+
+    <button class="mobile-menu-btn"
+            onclick="toggleMobileMenu()">
+        ☰
+    </button>
+
+</header>
+
+
+<!-- MOBILE MENU -->
+
+<div id="mobileMenu" class="mobile-menu">
+
+    <a href="dashboard.html">🏠 Home</a>
+    <a href="subjects.html">📚 Subjects</a>
+    <a href="tasks.html">📝 Tasks</a>
+    <a href="notes.html">📒 Notes</a>
+    <a href="goals.html">🎯 Goals</a>
+    <a href="profile.html">👤 Profile</a>
+
+    <button onclick="logout()">🚪 Logout</button>
+
+</div>
+
+
+<main class="page-container">
+
+    <!-- HEADER -->
+
+    <section class="page-header">
+
+        <div>
+
+            <h1>📒 My Notes</h1>
+
+            <p>
+                Save important study points and information.
+            </p>
+
+        </div>
+
+        <div class="page-header-icon">
+            📚
+        </div>
+
+    </section>
+
+
+    <!-- ADD NOTE -->
+
+    <section class="form-card">
+
+        <div class="section-title">
+
+            <div class="section-icon blue-icon">
+                ✏️
+            </div>
+
+            <div>
+
+                <h2>Create a Note</h2>
+
+                <p>
+                    Write down important study information.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <form id="noteForm">
+
+            <div class="input-group">
+
+                <label for="noteTitle">
+                    Note Title
+                </label>
+
+                <input
+                        type="text"
+                        id="noteTitle"
+                        placeholder="Example: Java Important Points"
+                        required>
+
+            </div>
+
+
+            <div class="input-group">
+
+                <label for="noteContent">
+                    Note Content
+                </label>
+
+                <textarea
+                        id="noteContent"
+                        rows="6"
+                        placeholder="Write your notes here..."
+                        required></textarea>
+
+            </div>
+
+
+            <button
+                    type="submit"
+                    class="primary-btn">
+
+                💾 Save Note
+
+            </button>
+
+        </form>
+
+
+        <p id="noteMessage" class="message"></p>
+
+    </section>
+
+
+    <!-- NOTES -->
+
+    <section class="content-card">
+
+        <div class="card-heading">
+
+            <div>
+
+                <h2>📚 Saved Notes</h2>
+
+                <p>
+                    Your important study notes.
+                </p>
+
+            </div>
+
+            <span class="small-badge">
+                Notes
+            </span>
+
+        </div>
+
+
+        <div id="notesList" class="notes-grid">
+
+            <!-- Notes loaded here -->
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<!-- MOBILE BOTTOM NAV -->
+
+<nav class="mobile-bottom-nav">
+
+    <a href="dashboard.html">
+        <span>🏠</span>
+        <small>Home</small>
+    </a>
+
+    <a href="subjects.html">
+        <span>📚</span>
+        <small>Subjects</small>
+    </a>
+
+    <a href="tasks.html">
+        <span>📝</span>
+        <small>Tasks</small>
+    </a>
+
+    <a href="notes.html" class="mobile-nav-active">
+        <span>📒</span>
+        <small>Notes</small>
+    </a>
+
+    <a href="goals.html">
+        <span>🎯</span>
+        <small>Goals</small>
+    </a>
+
+</nav>
+
+
+<script src="js/script.js"></script>
+
+<script>
+
+    function toggleMobileMenu() {
+
+        document
+            .getElementById("mobileMenu")
+            .classList.toggle("show");
+
+    }
+
+</script>
+
+</body>
+</html>

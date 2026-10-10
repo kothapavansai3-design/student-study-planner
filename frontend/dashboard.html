@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Student Study Planner</title>
+
+  <link rel="stylesheet" href="js/css/style.css">chat
+</head>
+
+<body>
+
+<!-- ================= NAVBAR ================= -->
+
+<header class="navbar">
+
+  <div class="logo">
+    🎓
+    <span>Student Study Planner</span>
+  </div>
+
+  <nav class="desktop-nav">
+
+    <a href="dashboard.html" class="active">
+      🏠 Dashboard
+    </a>
+
+    <a href="subjects.html">
+      📚 Subjects
+    </a>
+
+    <a href="tasks.html">
+      📝 Tasks
+    </a>
+
+    <a href="notes.html">
+      📒 Notes
+    </a>
+
+    <a href="goals.html">
+      🎯 Goals
+    </a>
+
+    <a href="profile.html">
+      👤 Profile
+    </a>
+
+    <button onclick="logout()" class="logout-btn">
+      Logout
+    </button>
+
+  </nav>
+
+  <!-- Mobile menu button -->
+
+  <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+    ☰
+  </button>
+
+</header>
+
+
+<!-- ================= MOBILE MENU ================= -->
+
+<div id="mobileMenu" class="mobile-menu">
+
+  <a href="dashboard.html">🏠 Home</a>
+
+  <a href="subjects.html">📚 Subjects</a>
+
+  <a href="tasks.html">📝 Tasks</a>
+
+  <a href="notes.html">📒 Notes</a>
+
+  <a href="goals.html">🎯 Goals</a>
+
+  <a href="profile.html">👤 Profile</a>
+
+  <button onclick="logout()">🚪 Logout</button>
+
+</div>
+
+
+<!-- ================= MAIN ================= -->
+
+<main class="dashboard-container">
+
+
+  <!-- ================= WELCOME ================= -->
+
+  <section class="welcome-section">
+
+    <div>
+
+      <h1>
+        Good Evening,
+        <span id="welcomeName">Student</span> 👋
+      </h1>
+
+      <p>
+        Stay consistent. Small steps make big progress.
+      </p>
+
+      <div class="today-date">
+        📅 <span id="todayDate"></span>
+      </div>
+
+    </div>
+
+    <div class="welcome-icon">
+      📚
+    </div>
+
+  </section>
+
+
+  <!-- ================= STATISTICS ================= -->
+
+  <section class="stats-grid">
+
+
+    <!-- SUBJECTS -->
+
+    <a href="subjects.html" class="stat-card blue">
+
+      <div class="stat-icon">
+        📚
+      </div>
+
+      <div class="stat-content">
+
+        <h3>Subjects</h3>
+
+        <strong id="subjectCount">
+          0
+        </strong>
+
+        <p>Total Subjects</p>
+
+      </div>
+
+      <span class="card-arrow">›</span>
+
+    </a>
+
+
+    <!-- TASKS -->
+
+    <a href="tasks.html" class="stat-card pink">
+
+      <div class="stat-icon">
+        📝
+      </div>
+
+      <div class="stat-content">
+
+        <h3>Total Tasks</h3>
+
+        <strong id="taskCount">
+          0
+        </strong>
+
+        <p>All Tasks</p>
+
+      </div>
+
+      <span class="card-arrow">›</span>
+
+    </a>
+
+
+    <!-- PENDING -->
+
+    <a href="tasks.html" class="stat-card orange">
+
+      <div class="stat-icon">
+        ⏳
+      </div>
+
+      <div class="stat-content">
+
+        <h3>Pending Tasks</h3>
+
+        <strong id="pendingCount">
+          0
+        </strong>
+
+        <p>To be completed</p>
+
+      </div>
+
+      <span class="card-arrow">›</span>
+
+    </a>
+
+
+    <!-- COMPLETED -->
+
+    <a href="tasks.html" class="stat-card green">
+
+      <div class="stat-icon">
+        ✅
+      </div>
+
+      <div class="stat-content">
+
+        <h3>Completed Tasks</h3>
+
+        <strong id="completedCount">
+          0
+        </strong>
+
+        <p>Completed</p>
+
+      </div>
+
+      <span class="card-arrow">›</span>
+
+    </a>
+
+
+  </section>
+
+
+  <!-- ================= SECOND STATISTICS ================= -->
+
+  <section class="stats-grid second-stats">
+
+
+    <a href="notes.html" class="stat-card purple">
+
+      <div class="stat-icon">
+        📒
+      </div>
+
+      <div class="stat-content">
+
+        <h3>Total Notes</h3>
+
+        <strong id="totalNotes">
+          0
+        </strong>
+
+        <p>All Notes</p>
+
+      </div>
+
+      <span class="card-arrow">›</span>
+
+    </a>
+
+
+    <a href="goals.html" class="stat-card violet">
+
+      <div class="stat-icon">
+        🎯
+      </div>
+
+      <div class="stat-content">
+
+        <h3>Total Goals</h3>
+
+        <strong id="totalGoals">
+          0
+        </strong>
+
+        <p>All Goals</p>
+
+      </div>
+
+      <span class="card-arrow">›</span>
+
+    </a>
+
+
+    <a href="goals.html" class="stat-card gold">
+
+      <div class="stat-icon">
+        🏆
+      </div>
+
+      <div class="stat-content">
+
+        <h3>Completed Goals</h3>
+
+        <strong id="completedGoals">
+          0
+        </strong>
+
+        <p>Goals Achieved</p>
+
+      </div>
+
+      <span class="card-arrow">›</span>
+
+    </a>
+
+
+  </section>
+
+
+  <!-- ================= TWO COLUMN AREA ================= -->
+
+  <section class="dashboard-columns">
+
+
+    <!-- UPCOMING TASKS -->
+
+    <div class="dashboard-box">
+
+      <div class="box-header">
+
+        <h2>
+          📅 Upcoming Tasks
+        </h2>
+
+        <a href="tasks.html">
+          View All
+        </a>
+
+      </div>
+
+      <div id="upcoming" class="upcoming-list">
+
+        <div class="empty-state">
+
+          <div class="empty-icon">
+            📋
+          </div>
+
+          <h3>No pending tasks</h3>
+
+          <p>
+            You are all caught up! 🎉
+          </p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- QUICK ACTIONS -->
+
+    <div class="dashboard-box">
+
+      <div class="box-header">
+
+        <h2>
+          ⚡ Quick Actions
+        </h2>
+
+      </div>
+
+
+      <div class="quick-actions">
+
+        <a href="subjects.html" class="action-btn blue-action">
+          📚
+          <span>+ Add Subject</span>
+        </a>
+
+
+        <a href="tasks.html" class="action-btn red-action">
+          📝
+          <span>+ Add Task</span>
+        </a>
+
+
+        <a href="notes.html" class="action-btn purple-action">
+          📒
+          <span>+ Add Note</span>
+        </a>
+
+
+        <a href="goals.html" class="action-btn orange-action">
+          🎯
+          <span>+ Add Goal</span>
+        </a>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ================= STUDY PROGRESS ================= -->
+
+  <section class="dashboard-columns bottom-section">
+
+
+    <div class="dashboard-box progress-box">
+
+      <div class="box-header">
+
+        <h2>
+          📊 Study Progress
+        </h2>
+
+      </div>
+
+
+      <div class="progress-info">
+
+                <span>
+                    Tasks Completed
+                </span>
+
+        <strong id="progressPercent">
+          0%
+        </strong>
+
+      </div>
+
+
+      <div class="progress-bar">
+
+        <div id="progressFill"></div>
+
+      </div>
+
+
+      <div class="progress-bottom">
+
+                <span>
+                    🟢 <span id="progressCompleted">0</span> Completed
+                </span>
+
+        <span>
+                    ⚪ <span id="progressRemaining">0</span> Remaining
+                </span>
+
+      </div>
+
+    </div>
+
+
+    <!-- STUDY TIP -->
+
+    <div class="dashboard-box study-tip">
+
+      <div class="box-header">
+
+        <h2>
+          💡 Study Tip
+        </h2>
+
+      </div>
+
+      <p>
+        “Small daily progress leads to big results.”
+      </p>
+
+      <span>
+                Stay consistent and keep learning.
+            </span>
+
+    </div>
+
+
+  </section>
+
+
+</main>
+
+
+<!-- ================= MOBILE BOTTOM NAVIGATION ================= -->
+
+<nav class="mobile-bottom-nav">
+
+  <a href="dashboard.html" class="mobile-nav-active">
+
+    <span>🏠</span>
+    <small>Home</small>
+
+  </a>
+
+
+  <a href="subjects.html">
+
+    <span>📚</span>
+    <small>Subjects</small>
+
+  </a>
+
+
+  <a href="tasks.html">
+
+    <span>📝</span>
+    <small>Tasks</small>
+
+  </a>
+
+
+  <a href="notes.html">
+
+    <span>📒</span>
+    <small>Notes</small>
+
+  </a>
+
+
+  <a href="goals.html">
+
+    <span>🎯</span>
+    <small>Goals</small>
+
+  </a>
+
+</nav>
+
+
+<script src="js/script.js"></script>
+
+
+<!-- ================= DASHBOARD EXTRA JS ================= -->
+
+<script>
+
+  // Welcome name
+
+  function loadWelcomeName() {
+
+    const user = getUser();
+
+    const nameElement =
+            document.getElementById("welcomeName");
+
+    if (user && user.name) {
+
+      nameElement.textContent =
+              user.name;
+
+    }
+
+  }
+
+
+  // Today's date
+
+  function loadTodayDate() {
+
+    const today =
+            new Date();
+
+    document.getElementById(
+            "todayDate"
+    ).textContent =
+            today.toLocaleDateString(
+                    "en-IN",
+                    {
+                      weekday: "long",
+                      day: "numeric",
+                      month: "long",
+                      year: "numeric"
+                    }
+            );
+
+  }
+
+
+  // Progress
+
+  function updateStudyProgress() {
+
+    const totalElement =
+            document.getElementById(
+                    "taskCount"
+            );
+
+    const completedElement =
+            document.getElementById(
+                    "completedCount"
+            );
+
+    if (!totalElement ||
+            !completedElement) {
+
+      return;
+
+    }
+
+    const total =
+            Number(
+                    totalElement.textContent
+            );
+
+    const completed =
+            Number(
+                    completedElement.textContent
+            );
+
+    let percentage = 0;
+
+    if (total > 0) {
+
+      percentage =
+              Math.round(
+                      (completed / total) * 100
+              );
+
+    }
+
+    document.getElementById(
+            "progressPercent"
+    ).textContent =
+            percentage + "%";
+
+
+    document.getElementById(
+            "progressFill"
+    ).style.width =
+            percentage + "%";
+
+
+    document.getElementById(
+            "progressCompleted"
+    ).textContent =
+            completed;
+
+
+    document.getElementById(
+            "progressRemaining"
+    ).textContent =
+            total - completed;
+
+  }
+
+
+  // Mobile menu
+
+  function toggleMobileMenu() {
+
+    const menu =
+            document.getElementById(
+                    "mobileMenu"
+            );
+
+    menu.classList.toggle(
+            "show"
+    );
+
+  }
+
+
+  document.addEventListener(
+          "DOMContentLoaded",
+          function () {
+
+            loadWelcomeName();
+
+            loadTodayDate();
+
+            setTimeout(
+                    updateStudyProgress,
+                    800
+            );
+
+          }
+  );
+
+</script>
+
+</body>
+
+</html>
