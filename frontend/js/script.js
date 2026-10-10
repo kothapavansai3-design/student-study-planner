@@ -657,3 +657,224 @@ function escapeHtml(value) {
         }[character];
     });
 }
+// ======================================================
+// GOALS PAGE
+// ======================================================
+
+async function setupGoals() {
+
+    const user = getUser();
+
+    if (!user) {
+        return;
+    }
+
+    const goalForm = document.getElementById("goalForm");
+    const goalMessage = document.getElementById("goalMessage");
+
+    await loadGoals(user.id);
+
+    goalForm.addEventListener("submit", async function (e) {
+
+        e.preventDefault();
+
+        goalMessage.style.color = "black";
+        goalMessage.textContent = "Saving goal...";
+
+        try {
+
+            const title = document.getElementById("goalTitle").value.trim();
+
+            const description =
+                document.getElementById("goalDescription").value.trim();
+
+            const targetDate =
+                document.getElementById("targetDate").value || null;
+
+            const progressValue =
+                Number(document.getElementById("progress").value || 0);
+
+            if (!title) {
+                goalMessage.style.color = "red";
+                goalMessage.textContent = "Please enter a goal title.";
+                return;
+            }
+
+            if (progressValue < 0 || progressValue > 100) {
+                goalMessage.style.color = "red";
+                goalMessage.textContent =
+                    "Progress must be between 0 and 100.";
+                return;
+            }
+
+            await request("/goals", {
+                method: "POST",
+                body: JSON.stringify({
+                    title: title,
+                    description: description,
+                    targetDate: targetDate,
+                    progress: progressValue,
+                    priority: "Medium",
+                    status: "In Progress",
+                    userId: user.id
+                })
+            });
+
+            goalForm.reset();
+
+            document.getElementById("progress").value = 0;
+
+            goalMessage.style.color = "green";
+            goalMessage.textContent = "Goal added successfully!";
+
+            await loadGoals(user.id);
+
+        } catch (error) {
+
+            console.error("Goal saving error:", error);
+
+            goalMessage.style.color = "red";
+            goalMessage.textContent =
+                "Could not save goal: " + error.message;
+        }
+    });
+}
+
+
+// ======================================================
+// LOAD GOALS
+// ======================================================
+
+async function loadGoals(userId) {
+
+    const goalsList = document.getElementById("goalsList");
+
+    try {
+
+        const goals = await request("/goals/user/" + userId);
+
+        if (!Array.isArray(goals) || goals.length === 0) {
+
+            goalsList.innerHTML = "<p>No goals added yet.</p>";
+            return;
+        }
+
+        goalsList.innerHTML = goals.map(function (goal) {
+
+            const completed = goal.status === "Completed";
+
+            return `
+                <div class="item">
+
+                    <h3>${escapeHtml(goal.title)}</h3>
+
+                    <p>
+                        ${escapeHtml(goal.description || "No description")}
+                    </p>
+
+                    <p>
+                        <strong>Target Date:</strong>
+                        ${escapeHtml(goal.targetDate || "Not set")}
+                    </p>
+
+                    <p>
+                        <strong>Progress:</strong>
+                        ${Number(goal.progress || 0)}%
+                    </p>
+
+                    <p>
+                        <strong>Status:</strong>
+                        ${escapeHtml(goal.status || "In Progress")}
+                    </p>
+
+                    ${
+                !completed
+                    ? `
+                            <button
+                                type="button"
+                                class="success"
+                                onclick="completeGoal(${goal.id})">
+                                Mark Completed
+                            </button>
+                        `
+                    : ""
+            }
+
+                    <button
+                        type="button"
+                        class="danger"
+                        onclick="deleteGoal(${goal.id})">
+                        Delete
+                    </button>
+
+                </div>
+            `;
+
+        }).join("");
+
+    } catch (error) {
+
+        console.error("Goal loading error:", error);
+
+        goalsList.innerHTML =
+            "<p>Could not load goals. Please refresh the page.</p>";
+    }
+}
+
+
+// ======================================================
+// COMPLETE GOAL
+// ======================================================
+
+async function completeGoal(id) {
+
+    try {
+
+        await request("/goals/" + id + "/complete", {
+            method: "PUT"
+        });
+
+        const user = getUser();
+
+        if (user) {
+            await loadGoals(user.id);
+        }
+
+    } catch (error) {
+
+        console.error("Complete goal error:", error);
+
+        alert("Could not complete goal: " + error.message);
+    }
+}
+
+
+// ======================================================
+// DELETE GOAL
+// ======================================================
+
+async function deleteGoal(id) {
+
+    if (!confirm("Are you sure you want to delete this goal?")) {
+        return;
+    }
+
+    try {
+
+        await request("/goals/" + id, {
+            method: "DELETE"
+        });
+
+        const user = getUser();
+
+        if (user) {
+            await loadGoals(user.id);
+        }
+
+    } catch (error) {
+
+        console.error("Delete goal error:", error);
+
+        alert("Could not delete goal: " + error.message);
+    }
+}
