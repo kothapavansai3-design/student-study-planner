@@ -1,4 +1,4 @@
-const API = "http://localhost:8080/api";
+const API = "https://student-study-planner-backend-hz5d.onrender.com/api";
 
 // ======================================================
 // USER FUNCTIONS
@@ -29,10 +29,11 @@ function logout() {
 
 async function request(url, options = {}) {
     const response = await fetch(API + url, {
+        ...options,
         headers: {
-            "Content-Type": "application/json"
-        },
-        ...options
+            "Content-Type": "application/json",
+            ...(options.headers || {})
+        }
     });
 
     const text = await response.text();
@@ -50,7 +51,15 @@ async function request(url, options = {}) {
         throw new Error(errorMessage);
     }
 
-    return text ? JSON.parse(text) : null;
+    if (!text) {
+        return null;
+    }
+
+    try {
+        return JSON.parse(text);
+    } catch (error) {
+        return text;
+    }
 }
 
 // ======================================================
@@ -59,34 +68,28 @@ async function request(url, options = {}) {
 
 document.addEventListener("DOMContentLoaded", function () {
 
-    // Register
     if (document.getElementById("registerForm")) {
         setupRegister();
     }
 
-    // Login
     if (document.getElementById("loginForm")) {
         setupLogin();
     }
 
-    // Subjects
     if (document.getElementById("subjectForm")) {
         requireLogin();
         setupSubjects();
     }
 
-    // Tasks
     if (document.getElementById("taskForm")) {
         requireLogin();
         setupTasks();
     }
 
-    // Dashboard
     if (document.getElementById("subjectCount")) {
         requireLogin();
         loadDashboard();
     }
-
 });
 
 // ======================================================
@@ -100,7 +103,6 @@ function setupRegister() {
         e.preventDefault();
 
         const message = document.getElementById("message");
-
         message.textContent = "Creating your account...";
 
         try {
@@ -113,6 +115,7 @@ function setupRegister() {
                 document.getElementById("classYear").value;
 
             if (!studentCategory || !classYear) {
+                message.style.color = "red";
                 message.textContent =
                     "Please select your student category and class/year.";
                 return;
@@ -139,6 +142,8 @@ function setupRegister() {
             }, 500);
 
         } catch (error) {
+            console.error("Registration error:", error);
+
             message.style.color = "red";
             message.textContent =
                 "Registration failed: " + error.message;
@@ -185,7 +190,8 @@ function setupLogin() {
             console.error("Login error:", error);
 
             message.style.color = "red";
-            message.textContent = "Invalid email or password.";
+            message.textContent =
+                "Login failed: " + error.message;
         }
     };
 }
@@ -203,33 +209,41 @@ async function setupSubjects() {
 
     await loadSubjects(user.id);
 
-    document.getElementById("subjectForm").onsubmit =
-        async function (e) {
+    const subjectForm = document.getElementById("subjectForm");
 
-            e.preventDefault();
+    if (!subjectForm) {
+        return;
+    }
 
-            const message = document.getElementById("message");
+    subjectForm.onsubmit = async function (e) {
+        e.preventDefault();
 
-            try {
-                await request("/subjects", {
-                    method: "POST",
-                    body: JSON.stringify({
-                        name: document.getElementById("subjectName").value,
-                        userId: user.id
-                    })
-                });
+        const message = document.getElementById("message");
 
-                document.getElementById("subjectName").value = "";
-                message.textContent = "Subject added successfully.";
+        try {
+            await request("/subjects", {
+                method: "POST",
+                body: JSON.stringify({
+                    name: document.getElementById("subjectName").value.trim(),
+                    userId: user.id
+                })
+            });
 
-                await loadSubjects(user.id);
+            document.getElementById("subjectName").value = "";
 
-            } catch (error) {
-                console.error("Subject error:", error);
-                message.textContent =
-                    "Could not add subject: " + error.message;
-            }
-        };
+            message.style.color = "green";
+            message.textContent = "Subject added successfully.";
+
+            await loadSubjects(user.id);
+
+        } catch (error) {
+            console.error("Subject error:", error);
+
+            message.style.color = "red";
+            message.textContent =
+                "Could not add subject: " + error.message;
+        }
+    };
 }
 
 // ======================================================
@@ -242,11 +256,10 @@ async function loadSubjects(userId) {
 
         console.log("Subjects received:", subjects);
 
-        // Display subjects
         const subjectList = document.getElementById("subjectList");
 
         if (subjectList) {
-            if (subjects.length === 0) {
+            if (!Array.isArray(subjects) || subjects.length === 0) {
                 subjectList.innerHTML = "<p>No subjects added yet.</p>";
             } else {
                 subjectList.innerHTML = subjects.map(function (subject) {
@@ -259,7 +272,6 @@ async function loadSubjects(userId) {
             }
         }
 
-        // Fill task subject dropdown
         const subjectSelect = document.getElementById("subjectId");
 
         if (subjectSelect) {
@@ -273,18 +285,27 @@ async function loadSubjects(userId) {
 
             subjectSelect.appendChild(defaultOption);
 
-            subjects.forEach(function (subject) {
-                const option = document.createElement("option");
+            if (Array.isArray(subjects)) {
+                subjects.forEach(function (subject) {
+                    const option = document.createElement("option");
 
-                option.value = subject.id;
-                option.textContent = subject.name;
+                    option.value = subject.id;
+                    option.textContent = subject.name;
 
-                subjectSelect.appendChild(option);
-            });
+                    subjectSelect.appendChild(option);
+                });
+            }
         }
 
     } catch (error) {
         console.error("Subject loading error:", error);
+
+        const subjectList = document.getElementById("subjectList");
+
+        if (subjectList) {
+            subjectList.innerHTML =
+                "<p>Could not load subjects. Please try again.</p>";
+        }
     }
 }
 
@@ -302,51 +323,58 @@ async function setupTasks() {
     await loadSubjects(user.id);
     await loadTasks(user.id);
 
-    document.getElementById("taskForm").onsubmit =
-        async function (e) {
+    const taskForm = document.getElementById("taskForm");
 
-            e.preventDefault();
+    if (!taskForm) {
+        return;
+    }
 
-            const message = document.getElementById("message");
+    taskForm.onsubmit = async function (e) {
+        e.preventDefault();
 
-            try {
-                const selectedSubject =
-                    document.getElementById("subjectId").value;
+        const message = document.getElementById("message");
 
-                if (!selectedSubject) {
-                    alert("Please select a subject.");
-                    return;
-                }
+        try {
+            const selectedSubject =
+                document.getElementById("subjectId").value;
 
-                await request("/tasks", {
-                    method: "POST",
-                    body: JSON.stringify({
-                        title: document.getElementById("taskTitle").value,
-                        description:
-                        document.getElementById("description").value,
-                        subjectId: Number(selectedSubject),
-                        deadline:
-                            document.getElementById("deadline").value || null,
-                        reminder:
-                            document.getElementById("reminder").value || null,
-                        status: "PENDING"
-                    })
-                });
-
-                document.getElementById("taskForm").reset();
-
-                message.textContent = "Task added successfully.";
-
-                await loadTasks(user.id);
-                await loadSubjects(user.id);
-
-            } catch (error) {
-                console.error("Task error:", error);
-
-                message.textContent =
-                    "Could not add task: " + error.message;
+            if (!selectedSubject) {
+                message.style.color = "red";
+                message.textContent = "Please select a subject.";
+                return;
             }
-        };
+
+            await request("/tasks", {
+                method: "POST",
+                body: JSON.stringify({
+                    title: document.getElementById("taskTitle").value.trim(),
+                    description:
+                    document.getElementById("description").value,
+                    subjectId: Number(selectedSubject),
+                    deadline:
+                        document.getElementById("deadline").value || null,
+                    reminder:
+                        document.getElementById("reminder").value || null,
+                    status: "PENDING"
+                })
+            });
+
+            taskForm.reset();
+
+            message.style.color = "green";
+            message.textContent = "Task added successfully.";
+
+            await loadTasks(user.id);
+            await loadSubjects(user.id);
+
+        } catch (error) {
+            console.error("Task error:", error);
+
+            message.style.color = "red";
+            message.textContent =
+                "Could not add task: " + error.message;
+        }
+    };
 }
 
 // ======================================================
@@ -363,18 +391,16 @@ async function loadTasks(userId) {
             return;
         }
 
-        if (tasks.length === 0) {
+        if (!Array.isArray(tasks) || tasks.length === 0) {
             taskList.innerHTML = "<p>No tasks added yet.</p>";
             return;
         }
 
         taskList.innerHTML = tasks.map(function (task) {
-
             const completed = task.status === "COMPLETED";
 
             return `
                 <div class="item ${completed ? "completed" : ""}">
-
                     <h3>${escapeHtml(task.title)}</h3>
 
                     <p>${escapeHtml(task.description || "")}</p>
@@ -411,13 +437,19 @@ async function loadTasks(userId) {
                         onclick="deleteTask(${task.id})">
                         Delete
                     </button>
-
                 </div>
             `;
         }).join("");
 
     } catch (error) {
         console.error("Task loading error:", error);
+
+        const taskList = document.getElementById("taskList");
+
+        if (taskList) {
+            taskList.innerHTML =
+                "<p>Could not load tasks. Please try again.</p>";
+        }
     }
 }
 
@@ -439,7 +471,7 @@ async function completeTask(id) {
 
     } catch (error) {
         console.error("Complete task error:", error);
-        alert("Could not complete task.");
+        alert("Could not complete task: " + error.message);
     }
 }
 
@@ -465,7 +497,7 @@ async function deleteTask(id) {
 
     } catch (error) {
         console.error("Delete task error:", error);
-        alert("Could not delete task.");
+        alert("Could not delete task: " + error.message);
     }
 }
 
@@ -480,7 +512,6 @@ async function loadDashboard() {
         return;
     }
 
-    // Welcome message
     const welcome = document.getElementById("welcome");
 
     if (welcome) {
@@ -488,17 +519,21 @@ async function loadDashboard() {
     }
 
     try {
-        // Load subjects
         const subjects = await request("/subjects/user/" + user.id);
 
-        document.getElementById("subjectCount").textContent =
-            subjects.length;
+        const subjectCount = document.getElementById("subjectCount");
 
-        // Load tasks
+        if (subjectCount) {
+            subjectCount.textContent = subjects.length;
+        }
+
         const tasks = await request("/tasks/user/" + user.id);
 
-        document.getElementById("taskCount").textContent =
-            tasks.length;
+        const taskCount = document.getElementById("taskCount");
+
+        if (taskCount) {
+            taskCount.textContent = tasks.length;
+        }
 
         const pendingTasks = tasks.filter(function (task) {
             return task.status !== "COMPLETED";
@@ -508,32 +543,45 @@ async function loadDashboard() {
             return task.status === "COMPLETED";
         });
 
-        document.getElementById("pendingCount").textContent =
-            pendingTasks.length;
+        const pendingCount = document.getElementById("pendingCount");
 
-        document.getElementById("completedCount").textContent =
-            completedTasks.length;
+        if (pendingCount) {
+            pendingCount.textContent = pendingTasks.length;
+        }
 
-        // Load notes
+        const completedCount = document.getElementById("completedCount");
+
+        if (completedCount) {
+            completedCount.textContent = completedTasks.length;
+        }
+
         const notes = await request("/notes/user/" + user.id);
 
-        document.getElementById("totalNotes").textContent =
-            notes.length;
+        const totalNotes = document.getElementById("totalNotes");
 
-        // Load goals
+        if (totalNotes) {
+            totalNotes.textContent = notes.length;
+        }
+
         const goals = await request("/goals/user/" + user.id);
 
-        document.getElementById("totalGoals").textContent =
-            goals.length;
+        const totalGoals = document.getElementById("totalGoals");
+
+        if (totalGoals) {
+            totalGoals.textContent = goals.length;
+        }
 
         const completedGoals = goals.filter(function (goal) {
             return goal.status === "Completed";
         });
 
-        document.getElementById("completedGoals").textContent =
-            completedGoals.length;
+        const completedGoalsElement =
+            document.getElementById("completedGoals");
 
-        // Display upcoming tasks
+        if (completedGoalsElement) {
+            completedGoalsElement.textContent = completedGoals.length;
+        }
+
         const upcoming = document.getElementById("upcoming");
 
         if (upcoming) {
@@ -566,6 +614,13 @@ async function loadDashboard() {
 
     } catch (error) {
         console.error("Dashboard error:", error);
+
+        const upcoming = document.getElementById("upcoming");
+
+        if (upcoming) {
+            upcoming.innerHTML =
+                "<p>Could not load dashboard data. Please refresh.</p>";
+        }
     }
 }
 
